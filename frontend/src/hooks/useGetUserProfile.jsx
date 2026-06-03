@@ -1,24 +1,26 @@
-import { setUserProfile } from "@/redux/authSlice";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { setUserProfile } from "../features/auth/authSlice";
+import axionsInstance from "../services/axiosInstance";
 
-
-const useGetUserProfile = (userId) => {
+const useGetUserProfile = () => {
     const dispatch = useDispatch();
-    // const [userProfile, setUserProfile] = useState(null);
     useEffect(() => {
-        const fetchUserProfile = async () => {
-            try {
-                const res = await axios.get(`https://instaclone-g9h5.onrender.com/api/v1/user/${userId}/profile`, { withCredentials: true });
-                if (res.data.success) { 
-                    dispatch(setUserProfile(res.data.user));
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        }
-        fetchUserProfile();
-    }, [userId]);
-};
-export default useGetUserProfile;
+const fetchUserProfile = async () => {
+    try{
+         const response = await axionsInstance.get((`/user/${userId}/profile`), {
+            withCredentials: true,
+         });
+         console.log("User Profile Response : ", response);
+         if(response.data.success){
+            dispatch(setUserProfile(response.data.user));
+         }
+    } catch(error){
+            console.error("Error fetching user profile:", error);
+    }
+}
+fetchUserProfile();
+    }, [userId])
+}
+
+export default useGetUserProfile;   

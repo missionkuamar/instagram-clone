@@ -98,12 +98,14 @@ export const likePost = async (req, res) => {
         await post.updateOne({ $addToSet: { likes: likeKrneWalaUserKiId } });
         await post.save();
 
+        // ✅ Fetch updated post to get latest likes array
+        const updatedPost = await Post.findById(postId);
+        
         // implement socket io for real time notification
         const user = await User.findById(likeKrneWalaUserKiId).select('username profilePicture');
          
         const postOwnerId = post.author.toString();
         if(postOwnerId !== likeKrneWalaUserKiId){
-            // emit a notification event
             const notification = {
                 type:'like',
                 userId:likeKrneWalaUserKiId,
@@ -115,11 +117,22 @@ export const likePost = async (req, res) => {
             io.to(postOwnerSocketId).emit('notification', notification);
         }
 
-        return res.status(200).json({message:'Post liked', success:true});
+        // ✅ Return likes array and count
+        return res.status(200).json({
+            message: 'Post liked', 
+            success: true,
+            likes: updatedPost.likes,  // Send full likes array
+            likeCount: updatedPost.likes.length  // Send count
+        });
     } catch (error) {
-
+        console.log(error);
+        return res.status(500).json({ 
+            message: 'Internal server error', 
+            success: false 
+        });
     }
 }
+
 export const dislikePost = async (req, res) => {
     try {
         const likeKrneWalaUserKiId = req.id;
@@ -127,31 +140,41 @@ export const dislikePost = async (req, res) => {
         const post = await Post.findById(postId);
         if (!post) return res.status(404).json({ message: 'Post not found', success: false });
 
-        // like logic started
+        // dislike logic started
         await post.updateOne({ $pull: { likes: likeKrneWalaUserKiId } });
         await post.save();
 
+        // ✅ Fetch updated post
+        const updatedPost = await Post.findById(postId);
+        
         // implement socket io for real time notification
         const user = await User.findById(likeKrneWalaUserKiId).select('username profilePicture');
         const postOwnerId = post.author.toString();
         if(postOwnerId !== likeKrneWalaUserKiId){
-            // emit a notification event
             const notification = {
                 type:'dislike',
                 userId:likeKrneWalaUserKiId,
                 userDetails:user,
                 postId,
-                message:'Your post was liked'
+                message:'Your post was disliked'
             }
             const postOwnerSocketId = getReceiverSocketId(postOwnerId);
             io.to(postOwnerSocketId).emit('notification', notification);
         }
-
-
-
-        return res.status(200).json({message:'Post disliked', success:true});
+   
+        // ✅ Return likes array and count
+        return res.status(200).json({
+            message: 'Post disliked', 
+            success: true,
+            likes: updatedPost.likes,
+            likeCount: updatedPost.likes.length
+        });
     } catch (error) {
-
+        console.log(error);
+        return res.status(500).json({ 
+            message: 'Internal server error', 
+            success: false 
+        });
     }
 }
 export const addComment = async (req,res) =>{
