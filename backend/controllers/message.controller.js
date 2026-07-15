@@ -32,7 +32,7 @@ export const sendMessage = async (req,res) => {
             io.to(receiverSocketId).emit('newMessage', newMessage);
         }
 
-        return res.status(201).json({
+        return res.status(201).json({  
             success:true,
             newMessage
         })
@@ -40,10 +40,12 @@ export const sendMessage = async (req,res) => {
         console.log(error);
     }
 }
+
 export const getMessage = async (req,res) => {
     try {
         const senderId = req.id;
         const receiverId = req.params.id;
+        console.log("senderId",senderId,"receiverId", receiverId);
         const conversation = await Conversation.findOne({
             participants:{$all: [senderId, receiverId]}
         }).populate('messages');

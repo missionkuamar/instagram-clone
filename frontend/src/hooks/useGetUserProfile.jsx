@@ -1,26 +1,45 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setUserProfile } from "../features/auth/authSlice";
-import axionsInstance from "../services/axiosInstance";
+import axiosInstance from "../services/axiosInstance";
 
-const useGetUserProfile = () => {
-    const dispatch = useDispatch();
-    useEffect(() => {
-const fetchUserProfile = async () => {
-    try{
-         const response = await axionsInstance.get((`/user/${userId}/profile`), {
-            withCredentials: true,
-         });
-         console.log("User Profile Response : ", response);
-         if(response.data.success){
-            dispatch(setUserProfile(response.data.user));
-         }
-    } catch(error){
-            console.error("Error fetching user profile:", error);
+const useGetUserProfile = (userId) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    //console.log("Hook called with userId:", userId);
+
+    if (!userId) {
+      console.error("userId is undefined");
+      return;
     }
-}
-fetchUserProfile();
-    }, [userId])
-}
 
-export default useGetUserProfile;   
+    const fetchUserProfile = async () => {
+      try {
+       // console.log(`Calling API: /user/${userId}/profile`);
+
+        const response = await axiosInstance.get(
+          `/user/${userId}/profile`,
+          {
+            withCredentials: true,
+          }
+        );
+
+       // console.log("API Response:", response);
+
+        if (response.data.success) {
+          dispatch(setUserProfile(response.data.user));
+        }
+      } catch (error) {
+        console.error(
+          "API Error:",
+          error.response?.data || error.message
+        );
+      }
+    };
+
+    fetchUserProfile();
+  }, [userId, dispatch]);
+};
+
+export default useGetUserProfile;

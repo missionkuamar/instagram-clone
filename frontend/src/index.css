@@ -2,16 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
+/* @layer base {
   body {
     @apply bg-white dark:bg-gray-950;
   }
-}
+} */
 
 /* Smooth transitions */
-* {
+/* * {
   @apply transition-colors duration-200;
-}
+} */
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {

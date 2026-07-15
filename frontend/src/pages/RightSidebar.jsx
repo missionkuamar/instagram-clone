@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
  
 const RightSidebar = () => {
     const { user, suggestedUsers } = useSelector(store => store.auth || {});
-    console.log("RightSidebar User : ", user, "Suggested Users : ", suggestedUsers);
+   // console.log("RightSidebar User : ", user, "Suggested Users : ", suggestedUsers);
     const [isDark, setIsDark] = useState(false);
 
     // Listen for theme changes

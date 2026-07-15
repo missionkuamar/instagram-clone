@@ -9,7 +9,7 @@ const postSlice = createSlice({
     reducers: {
         setPosts:(state, action) => {
             state.posts = action.payload;
-            console.log('📌 [SLICE] Posts updated:', state.posts);
+            //console.log('📌 [SLICE] Posts updated:', state.posts);
         },
         deletePost: (state, action) => {
       // ✅ Delete ke liye alag reducer

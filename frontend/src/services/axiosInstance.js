@@ -1,102 +1,117 @@
-import axios from 'axios';
-import { toast } from 'sonner';
+import axios from "axios";
+import { toast } from "sonner";
 
-const API_BASE_URL = 'http://localhost:8000/api/v1';
+const API_BASE_URL = "http://localhost:8000/api/v1";
 
 const axiosInstance = axios.create({
-    baseURL: API_BASE_URL,
-    withCredentials: true,
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    timeout: 10000,
+  baseURL: API_BASE_URL,
+  withCredentials: true,
+  timeout: 15000,
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
 });
 
-// Request interceptor - FIXED LOGGING
+// ============================
+// REQUEST INTERCEPTOR
+// ============================
+
 axiosInstance.interceptors.request.use(
-    (config) => {
-        // ✅ Don't log FormData as it will be empty in console
-        const logData = config.data instanceof FormData 
-            ? 'FormData (cannot display)' 
-            : config.data;
-            
-        console.log('🚀 [AXIOS REQUEST]', {
-            method: config.method?.toUpperCase(),
-            url: config.url,
-            data: logData,
-            headers: config.headers
-        });
-        
-        // ✅ If data is FormData, remove the Content-Type header
-        // Let browser set it with proper boundary
-        if (config.data instanceof FormData) {
-            delete config.headers['Content-Type'];
-        }
-        
-        return config;
-    },
-    (error) => {
-        console.error('❌ [AXIOS REQUEST ERROR]', error);
-        return Promise.reject(error);
+  (config) => {
+    // console.group("🚀 AXIOS REQUEST");
+
+    // console.log("Method:", config.method?.toUpperCase());
+    // console.log("Base URL:", config.baseURL);
+    // console.log("URL:", config.url);
+    // console.log("Full URL:", `${config.baseURL}${config.url}`);
+    // console.log("Headers:", config.headers);
+    // console.log("With Credentials:", config.withCredentials);
+    // console.log("Timeout:", config.timeout);
+
+    if (config.data instanceof FormData) {
+      //console.log("Body: FormData");
+      delete config.headers["Content-Type"];
+    } else {
+      console.log("Body:", config.data);
     }
+
+    console.groupEnd();
+
+    return config;
+  },
+  (error) => {
+    console.group("❌ REQUEST ERROR");
+     console.error(error);
+     console.groupEnd();
+    return Promise.reject(error);
+  }
 );
 
-// Response interceptor - FIXED LOGGING
-axiosInstance.interceptors.response.use(
-    (response) => {
-        console.log('✅ [AXIOS RESPONSE]'
-            ,
-             {
-            status: response.status,
-            url: response.config.url,
-            data: response.data
-        });
-        return response;
-    },
-    (error) => {
-        console.error('❌ [AXIOS RESPONSE ERROR]', {
-            message: error.message,
-            response: error.response?.data,
-            status: error.response?.status,
-            url: error.config?.url
-        });
+// ============================
+// RESPONSE INTERCEPTOR
+// ============================
 
-        if (error.response) {
-            const { status, data } = error.response;
-            
-            switch (status) {
-                case 401:
-                    if (!window.location.pathname.includes('/login') && 
-                        !window.location.pathname.includes('/signup')) {
-                        toast.error('Session expired. Please login again.');
-                        window.dispatchEvent(new CustomEvent('auth-logout'));
-                    }
-                    break;
-                case 403:
-                    toast.error('Access forbidden');
-                    break;
-                case 404:
-                    toast.error('Resource not found');
-                    break;
-                case 500:
-                    toast.error('Server error. Please try again later');
-                    break;
-                default:
-                    if (data?.message) {
-                        toast.error(data.message);
-                    } else {
-                        toast.error(error.message || 'Something went wrong');
-                    }
-            }
-        } else if (error.request) {
-            console.error('No response received:', error.request);
-            toast.error('Network error. Please check your connection');
-        } else {
-            toast.error('Something went wrong. Please try again');
-        }
-        
-        return Promise.reject(error);
+axiosInstance.interceptors.response.use(
+  (response) => {
+    // console.group("✅ RESPONSE");
+
+    // console.log("Status:", response.status);
+    // console.log("Status Text:", response.statusText);
+    // console.log("URL:", response.config.url);
+    // console.log("Data:", response.data);
+
+     console.groupEnd();
+
+    return response;
+  },
+
+  (error) => {
+    console.group("❌ AXIOS ERROR");
+
+    // console.log("Message:", error.message);
+    // console.log("Code:", error.code);
+    // console.log("Name:", error.name);
+
+    if (error.config) {
+      // console.log("Method:", error.config.method);
+      // console.log("URL:", error.config.baseURL + error.config.url);
+      // console.log("Headers:", error.config.headers);
     }
+
+    if (error.response) {
+      // console.log("========== SERVER RESPONSE ==========");
+      // console.log("Status:", error.response.status);
+      // console.log("Status Text:", error.response.statusText);
+      // console.log("Headers:", error.response.headers);
+      // console.log("Data:", error.response.data);
+
+      toast.error(error.response.data?.message || "Server Error");
+    }
+
+    else if (error.request) {
+      // console.log("========== REQUEST SENT ==========");
+      // console.log(error.request);
+
+      // console.log("readyState:", error.request.readyState);
+      // console.log("status:", error.request.status);
+      // console.log("response:", error.request.response);
+      // console.log("responseText:", error.request.responseText);
+
+      toast.error("Network Error");
+    }
+
+    else {
+      // console.log("========== AXIOS CONFIG ERROR ==========");
+      console.error(error);
+
+      toast.error(error.message);
+    }
+
+    console.groupEnd();
+
+    return Promise.reject(error);
+  }
 );
 
 export default axiosInstance;

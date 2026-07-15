@@ -2,46 +2,137 @@ import express, { urlencoded } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+import path from "path";
+import searchRoute from './routes/searchRoutes.js'
 import connectDB from "./utils/db.js";
 import userRoute from "./routes/user.route.js";
 import postRoute from "./routes/post.route.js";
 import messageRoute from "./routes/message.route.js";
 import { app, server } from "./socket/socket.js";
-import path from "path";
- 
+
 dotenv.config();
 
-
-const PORT = process.env.PORT || 3000;
-
+const PORT = process.env.PORT || 8000;
 const __dirname = path.resolve();
 
-//middlewares
-app.use(express.json());
-app.use(cookieParser());
-app.use(urlencoded({ extended: true }));
-const corsOptions = {
-    origin: process.env.URL,
-    credentials: true
-}
-app.use(cors(corsOptions));
+console.log("===================================");
+console.log("🚀 SERVER STARTING...");
+console.log("PORT :", PORT);
+console.log("URL  :", process.env.URL);
+console.log("NODE :", process.version);
+console.log("===================================");
 
-// yha pr apni api ayengi
+// =====================
+// REQUEST LOGGER
+// =====================
+app.use((req, res, next) => {
+    // console.log("\n==============================");
+    // console.log("📥 NEW REQUEST");
+    // console.log("TIME   :", new Date().toLocaleString());
+    // console.log("METHOD :", req.method);
+    // console.log("URL    :", req.originalUrl);
+    // console.log("IP     :", req.ip);
+    // console.log("ORIGIN :", req.headers.origin);
+    // console.log("COOKIE :", req.headers.cookie);
+    // console.log("==============================");
+
+    res.on("finish", () => {
+        console.log("📤 RESPONSE :", res.statusCode);
+        console.log("==============================\n");
+    });
+
+    next();
+});
+
+// =====================
+// MIDDLEWARES
+// =====================
+
+app.use(express.json());
+
+app.use(
+    urlencoded({
+        extended: true,
+    })
+);
+
+app.use(cookieParser());
+
+app.use(
+    cors({
+        origin: "http://localhost:5173",
+        credentials: true,
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+        allowedHeaders: [
+            "Content-Type",
+            "Authorization"
+        ]
+    })
+);
+
+// =====================
+// TEST ROUTE
+// =====================
+
+app.get("/ping", (req, res) => {
+    //console.log("✅ PING HIT");
+    res.json({
+        success: true,
+        message: "Backend Working"
+    });
+});
+
+app.delete("/delete-test", (req, res) => {
+    //console.log("✅ DELETE TEST HIT");
+    res.json({
+        success: true,
+        message: "Delete Route Working"
+    });
+});
+
+// =====================
+// ROUTES
+// =====================
+
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/post", postRoute);
+app.use("/api/v1", searchRoute);
 app.use("/api/v1/message", messageRoute);
 
-app.get('/', (req, res) => {
-    res.send('hello mission')
-})
+// =====================
+// 404
+// =====================
 
-app.use(express.static(path.join(__dirname, "/frontend/dist")));
-app.get("*", (req,res)=>{
-    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
-})
+app.use((req, res) => {
+    console.log("❌ ROUTE NOT FOUND");
+    res.status(404).json({
+        success: false,
+        message: "Route Not Found"
+    });
+});
 
+// =====================
+// ERROR HANDLER
+// =====================
 
-server.listen(PORT, () => {
-    connectDB();
-    console.log(`Server listen at port ${PORT}`);
+app.use((err, req, res, next) => {
+  //  console.log("🔥 GLOBAL ERROR");
+    console.error(err);
+
+    res.status(500).json({
+        success: false,
+        message: err.message
+    });
+});
+
+// =====================
+// START SERVER
+// =====================
+
+server.listen(PORT, async () => {
+    await connectDB();
+
+    //console.log("================================");
+  //  console.log(`✅ Server Running : http://localhost:${PORT}`);
+  //  console.log("================================");
 });

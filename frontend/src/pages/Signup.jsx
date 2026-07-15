@@ -21,7 +21,7 @@ const Signup = () => {
     const dispatch = useDispatch();
 
     const changeEventHandler = (e) => {
-        console.log('📝 Input changed:', e.target.name, '=', e.target.value);
+       // console.log('📝 Input changed:', e.target.name, '=', e.target.value);
         setInput({ ...input, [e.target.name]: e.target.value });
         if (error) dispatch(clearError());
     }
@@ -133,7 +133,7 @@ const Signup = () => {
                         Creating account...
                     </Button>
                 ) : (
-                    <Button type='submit' className='w-full'>
+                    <Button type='submit' className='w-full bg-gray-200'>
                         Signup
                     </Button>
                 )}

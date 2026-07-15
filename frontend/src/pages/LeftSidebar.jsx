@@ -4,16 +4,19 @@ import { Heart, Home, LogOut, MessageCircle, PlusSquare, Search, TrendingUp, Sun
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom'
-import CreatePost from './CreatePost';  // ✅ Import CreatePost
+import CreatePost from './CreatePost';
+import NotificationsDialog from './NotificationsDialog';
 
 const LeftSidebar = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { user } = useSelector(store => store.auth);
+    const { likeNotification } = useSelector((store) => store.realTimeNotification);
     const dispatch = useDispatch();
-    const [openCreatePost, setOpenCreatePost] = useState(false);  // ✅ Renamed to avoid conflict
+    const [openCreatePost, setOpenCreatePost] = useState(false);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
-    
+    const [openNotifications, setOpenNotifications] = useState(false);
+
     // Theme State
     const [isDark, setIsDark] = useState(() => {
         const saved = localStorage.getItem('theme');
@@ -33,12 +36,15 @@ const LeftSidebar = () => {
 
     const toggleTheme = () => setIsDark(!isDark);
 
+    // ✅ Count unread notifications
+    const unreadCount = likeNotification?.filter(notif => !notif.read)?.length || 0;
+
     const sidebarHandler = (textType) => {
         if (textType === 'Logout') {
             dispatch(logoutUser());
         }
         else if (textType === "Create") {
-            setOpenCreatePost(true);  // ✅ Open Create Post Dialog
+            setOpenCreatePost(true);
         }
         else if (textType === "Profile") {
             navigate(`/profile/${user?._id}`);
@@ -56,8 +62,9 @@ const LeftSidebar = () => {
             navigate("/explore");
         }
         else if (textType === "Notifications") {
-            navigate("/notifications");
+            setOpenNotifications(true);
         }
+
         setIsMobileOpen(false);
     }
 
@@ -65,6 +72,7 @@ const LeftSidebar = () => {
         if (text === 'Home' && (location.pathname === '/' || location.pathname === '')) return true;
         if (text === 'Message' && location.pathname === '/chat') return true;
         if (text === 'Profile' && location.pathname.includes('/profile')) return true;
+        if (text === 'Notifications' && location.pathname === '/notifications') return true;
         return false;
     }
 
@@ -73,7 +81,19 @@ const LeftSidebar = () => {
         { icon: <Search size={22} />, text: 'Search' },
         { icon: <TrendingUp size={22} />, text: 'Explore' },
         { icon: <MessageCircle size={22} />, text: 'Message' },
-        { icon: <Heart size={22} />, text: "Notifications" },
+        { 
+            icon: (
+                <div className="relative">
+                    <Heart size={22} />
+                    {unreadCount > 0 && (
+                        <span className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full animate-pulse">
+                            {unreadCount > 9 ? '9+' : unreadCount}
+                        </span>
+                    )}
+                </div>
+            ), 
+            text: "Notifications" 
+        },
         { icon: <PlusSquare size={22} />, text: "Create" },
         {
             icon: (
@@ -83,7 +103,7 @@ const LeftSidebar = () => {
                         {user?.username?.charAt(0)?.toUpperCase() || 'U'}
                     </AvatarFallback>
                 </Avatar>
-            ), 
+            ),
             text: "Profile"
         },
         { icon: <LogOut size={22} />, text: "Logout" },
@@ -91,11 +111,15 @@ const LeftSidebar = () => {
 
     return (
         <>
-            {/* Create Post Dialog */}
             <CreatePost open={openCreatePost} setOpen={setOpenCreatePost} />
+            
+            <NotificationsDialog 
+                open={openNotifications} 
+                setOpen={setOpenNotifications}
+            />
 
             {/* Mobile Menu Button */}
-            <button 
+            <button
                 onClick={() => setIsMobileOpen(!isMobileOpen)}
                 className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700"
             >
@@ -117,13 +141,13 @@ const LeftSidebar = () => {
                 <div className='flex flex-col h-full'>
                     {/* Header */}
                     <div className='flex items-center justify-between px-5 pt-6 pb-4 border-b border-gray-200 dark:border-gray-800'>
-                        <h1 
+                        <h1
                             onClick={() => navigate('/')}
                             className='font-bold text-xl bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent cursor-pointer'
                         >
                             SocialHub
                         </h1>
-                        <button 
+                        <button
                             onClick={toggleTheme}
                             className='p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition'
                         >
@@ -142,8 +166,8 @@ const LeftSidebar = () => {
                                     className={`
                                         flex items-center gap-3 relative cursor-pointer 
                                         rounded-lg p-3 my-1 transition-all duration-200
-                                        ${active 
-                                            ? 'bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400' 
+                                        ${active
+                                            ? 'bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400'
                                             : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'
                                         }
                                     `}
@@ -180,7 +204,7 @@ const LeftSidebar = () => {
 
             {/* Overlay */}
             {isMobileOpen && (
-                <div 
+                <div
                     onClick={() => setIsMobileOpen(false)}
                     className='fixed inset-0 bg-black/50 z-30 lg:hidden'
                 />

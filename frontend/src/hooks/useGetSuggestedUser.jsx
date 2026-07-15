@@ -16,6 +16,7 @@ const useGetSuggestedUser = () => {
             // console.log("Suggested Users Response : ", response);
             if(response.data.success){
                 disptach(setSuggestedUsers(response.data.users));
+                
             }
 
         } catch(error){

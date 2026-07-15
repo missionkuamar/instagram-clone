@@ -82,6 +82,7 @@ const initialState = {
     error: null,
     suggestedUsers: [], // New state for suggested users
     userProfile: null, // New state for user profile
+    selectedUser: null,
 };
 
 const authSlice = createSlice({
@@ -99,11 +100,17 @@ const authSlice = createSlice({
         },
         setSuggestedUsers: (state, action) => {
             state.suggestedUsers = action.payload;
-             console.log('✅ [SLICE] Suggested users updated:', action.payload);
+             //console.log('✅ [SLICE] Suggested users updated:', action.payload);
         },
         setUserProfile: (state, action) => {
             state.userProfile = action.payload;
-            console.log('✅ [SLICE] User profile updated:', action.payload);
+           // console.log('✅ [SLICE] User profile updated:', action.payload);
+        },
+        setAuthUser:(state, action) => {
+            state.user = action.payload;
+        },
+        setSelectedUser: (state, action) => {
+            state.selectedUser = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -169,7 +176,7 @@ const authSlice = createSlice({
     },
 });
 
-export const { clearError, resetAuthState, setSuggestedUsers, setUserProfile } = authSlice.actions;
+export const { clearError, resetAuthState, setSuggestedUsers, setUserProfile, setAuthUser, setSelectedUser } = authSlice.actions;
 
 // Selectors
 export const selectUser = (state) => state.auth.user;

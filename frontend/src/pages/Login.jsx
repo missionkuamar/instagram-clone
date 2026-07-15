@@ -100,7 +100,7 @@ const Login = () => {
                         Please wait...
                     </Button>
                 ) : (
-                    <Button type='submit' className='w-full'>
+                    <Button type='submit' className='w-full bg-gray-200'>
                         Login
                     </Button>
                 )}

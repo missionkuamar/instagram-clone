@@ -8,15 +8,15 @@ const useGetAllPost = () => {
     const dispatch = useDispatch();
     useEffect(() => {
         const fetchAllPost = async () => {
-            try{
-const response = await axiosInstance.get('/post/all', {
-    withCredentials: true
-});
-console.log("All Post Response : ", response);
-                if(response.data.success){
+            try {
+                const response = await axiosInstance.get('/post/all', {
+                    withCredentials: true
+                });
+                //console.log("All Post Response : ", response);
+                if (response.data.success) {
                     dispatch(setPosts(response.data.posts));
                 }
-            } catch(error){
+            } catch (error) {
                 console.log(error);
             }
         }
