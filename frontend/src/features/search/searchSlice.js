@@ -1,22 +1,18 @@
-// features/search/searchSlice.js
+// features/search/searchSlice.js - Completely Independent
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../services/axiosInstance';
 import { toast } from 'sonner';
 
-// ✅ FIXED: Search Posts API
+// ============ POSTS ACTIONS ============
 export const searchPosts = createAsyncThunk(
     'search/searchPosts',
-    async ({ query, filter = 'all', page = 1, limit = 10 }, { rejectWithValue }) => {
+    async ({ query = '', page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'desc' }, { rejectWithValue }) => {
         try {
             const response = await axiosInstance.get('/search/posts', {
-                params: { 
-                    q: query, 
-                    filter, 
-                    page, 
-                    limit 
-                },
+                params: { search: query, page, limit, sortBy, sortOrder },
                 withCredentials: true
             });
+            console.log("search Posts :", response);
             return response.data;
         } catch (error) {
             const message = error.response?.data?.message || error.message || 'Failed to search posts';
@@ -26,45 +22,8 @@ export const searchPosts = createAsyncThunk(
     }
 );
 
-// ✅ FIXED: Search Users API
-export const searchUsers = createAsyncThunk(
-    'search/searchUsers',
-    async ({ query, page = 1, limit = 10 }, { rejectWithValue }) => {
-        try {
-            const response = await axiosInstance.get('/search/users', {
-                params: { q: query, page, limit },
-                withCredentials: true
-            });
-            return response.data;
-        } catch (error) {
-            const message = error.response?.data?.message || error.message || 'Failed to search users';
-            toast.error(message);
-            return rejectWithValue(message);
-        }
-    }
-);
-
-// ✅ FIXED: Search Hashtags API
-export const searchHashtags = createAsyncThunk(
-    'search/searchHashtags',
-    async ({ query, page = 1, limit = 10 }, { rejectWithValue }) => {
-        try {
-            const response = await axiosInstance.get('/search/hashtags', {
-                params: { q: query, page, limit },
-                withCredentials: true
-            });
-            return response.data;
-        } catch (error) {
-            const message = error.response?.data?.message || error.message || 'Failed to search hashtags';
-            toast.error(message);
-            return rejectWithValue(message);
-        }
-    }
-);
-
-// ✅ FIXED: Advanced Search API
-export const advancedSearch = createAsyncThunk(
-    'search/advancedSearch',
+export const advancedSearchPosts = createAsyncThunk(
+    'search/advancedSearchPosts',
     async (filters, { rejectWithValue }) => {
         try {
             const response = await axiosInstance.post('/search/advanced', filters, {
@@ -79,7 +38,44 @@ export const advancedSearch = createAsyncThunk(
     }
 );
 
-// ✅ FIXED: Get Trending Topics API
+// ============ USERS ACTIONS ============
+export const searchUsers = createAsyncThunk(
+    'search/searchUsers',
+    async ({ query = '', page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'desc' }, { rejectWithValue }) => {
+        try {
+            const response = await axiosInstance.get('/search/users', {
+                params: { search: query, page, limit, sortBy, sortOrder },
+                withCredentials: true
+            });
+           // console.log("search User response :", response);
+            return response.data;
+        } catch (error) {
+            const message = error.response?.data?.message || error.message || 'Failed to search users';
+            toast.error(message);
+            return rejectWithValue(message);
+        }
+    }
+);
+
+// ============ HASHTAGS ACTIONS ============
+export const searchHashtags = createAsyncThunk(
+    'search/searchHashtags',
+    async ({ query = '', page = 1, limit = 10 }, { rejectWithValue }) => {
+        try {
+            const response = await axiosInstance.get('/search/hashtags', {
+                params: { q: query, page, limit },
+                withCredentials: true
+            });
+            return response.data;
+        } catch (error) {
+            const message = error.response?.data?.message || error.message || 'Failed to search hashtags';
+            toast.error(message);
+            return rejectWithValue(message);
+        }
+    }
+);
+
+// ============ TRENDING ============
 export const getTrendingTopics = createAsyncThunk(
     'search/getTrendingTopics',
     async (_, { rejectWithValue }) => {
@@ -96,167 +92,222 @@ export const getTrendingTopics = createAsyncThunk(
     }
 );
 
+// ============ INITIAL STATE ============
 const initialState = {
+    // Posts State
     posts: [],
-    users: [],
-    hashtags: [],
-    trendingTopics: [],
-    searchResults: {
-        posts: [],
-        users: [],
-        hashtags: []
-    },
-    pagination: {
+    postsLoading: false,
+    postsError: null,
+    postsQuery: '',
+    postsPagination: {
         currentPage: 1,
         totalPages: 1,
         totalItems: 0,
         itemsPerPage: 10
     },
-    isLoading: false,
-    error: null,
-    searchQuery: '',
-    activeFilter: 'all',
-    advancedFilters: {
-        startDate: null,
-        endDate: null,
+    postsFilters: {
+        sortBy: 'createdAt',
+        sortOrder: 'desc'
+    },
+    postsAdvancedFilters: {
+        startDate: '',
+        endDate: '',
         minLikes: 0,
         maxLikes: null,
         minComments: 0,
         maxComments: null,
         sortBy: 'recent'
-    }
+    },
+
+    // Users State
+    users: [],
+    usersLoading: false,
+    usersError: null,
+    usersQuery: '',
+    usersPagination: {
+        currentPage: 1,
+        totalPages: 1,
+        totalItems: 0,
+        itemsPerPage: 10
+    },
+    usersFilters: {
+        sortBy: 'createdAt',
+        sortOrder: 'desc'
+    },
+
+    // Hashtags State
+    hashtags: [],
+    hashtagsLoading: false,
+    hashtagsError: null,
+    hashtagsQuery: '',
+
+    // Common
+    trendingTopics: [],
+    activeTab: 'posts'
 };
 
+// ============ SLICE ============
 const searchSlice = createSlice({
     name: 'search',
     initialState,
     reducers: {
-        setSearchQuery: (state, action) => {
-            state.searchQuery = action.payload;
+        // Posts
+        setPostsQuery: (state, action) => {
+            state.postsQuery = action.payload;
         },
-        setActiveFilter: (state, action) => {
-            state.activeFilter = action.payload;
+        setPostsPagination: (state, action) => {
+            state.postsPagination = { ...state.postsPagination, ...action.payload };
         },
-        setAdvancedFilters: (state, action) => {
-            state.advancedFilters = { ...state.advancedFilters, ...action.payload };
+        setPostsFilters: (state, action) => {
+            state.postsFilters = { ...state.postsFilters, ...action.payload };
         },
-        resetAdvancedFilters: (state) => {
-            state.advancedFilters = initialState.advancedFilters;
+        setPostsAdvancedFilters: (state, action) => {
+            state.postsAdvancedFilters = { ...state.postsAdvancedFilters, ...action.payload };
         },
-        clearSearchResults: (state) => {
-            state.searchResults = {
-                posts: [],
-                users: [],
-                hashtags: []
-            };
-            state.pagination = initialState.pagination;
-            state.error = null;
+        resetPostsAdvancedFilters: (state) => {
+            state.postsAdvancedFilters = initialState.postsAdvancedFilters;
         },
-        setPage: (state, action) => {
-            state.pagination.currentPage = action.payload;
+        clearPosts: (state) => {
+            console.log('call clear Posts')
+            state.posts = [];
+            state.postsQuery = '';
+            state.postsPagination = initialState.postsPagination;
+        },
+
+        // Users
+        setUsersQuery: (state, action) => {
+            state.usersQuery = action.payload;
+        },
+        setUsersPagination: (state, action) => {
+            state.usersPagination = { ...state.usersPagination, ...action.payload };
+        },
+        setUsersFilters: (state, action) => {
+            state.usersFilters = { ...state.usersFilters, ...action.payload };
+        },
+        clearUsers: (state) => {
+            console.log("clearUser call ")
+            state.users = [];
+            state.usersQuery = '';
+            state.usersPagination = initialState.usersPagination;
+        },
+
+        // Hashtags
+        setHashtagsQuery: (state, action) => {
+            state.hashtagsQuery = action.payload;
+        },
+        clearHashtags: (state) => {
+            state.hashtags = [];
+            state.hashtagsQuery = '';
+        },
+
+        // Common
+        setActiveTab: (state, action) => {
+            state.activeTab = action.payload;
         },
         resetSearchState: () => initialState
     },
     extraReducers: (builder) => {
         builder
-            // Search Posts
+            // Posts
             .addCase(searchPosts.pending, (state) => {
-                state.isLoading = true;
-                state.error = null;
+                state.postsLoading = true;
+                state.postsError = null;
             })
             .addCase(searchPosts.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.searchResults.posts = action.payload.posts || action.payload.results || [];
-                state.pagination = {
-                    currentPage: action.payload.currentPage || action.payload.page || 1,
-                    totalPages: action.payload.totalPages || action.payload.pages || 1,
-                    totalItems: action.payload.totalItems || action.payload.total || 0,
-                    itemsPerPage: action.payload.itemsPerPage || action.payload.limit || 10
+                 console.log("Searc Posts : ", action.payload);
+                state.postsLoading = false;
+                state.posts = action.payload?.posts || [];
+                state.postsPagination = {
+                    currentPage: action.payload?.pagination?.currentPage || 1,
+                    totalPages: action.payload?.pagination?.totalPages || 1,
+                    totalItems: action.payload?.pagination?.totalItems || 0,
+                    itemsPerPage: action.payload?.pagination?.itemsPerPage || 10
                 };
             })
             .addCase(searchPosts.rejected, (state, action) => {
-                state.isLoading = false;
-                state.error = action.payload || 'Search failed';
+                state.postsLoading = false;
+                state.postsError = action.payload || 'Search failed';
             })
-            
-            // Search Users
+
+            // Advanced Posts
+            .addCase(advancedSearchPosts.pending, (state) => {
+                state.postsLoading = true;
+                state.postsError = null;
+            })
+            .addCase(advancedSearchPosts.fulfilled, (state, action) => {
+                state.postsLoading = false;
+                state.posts = action.payload?.posts || [];
+                state.postsPagination = {
+                    currentPage: action.payload?.pagination?.currentPage || 1,
+                    totalPages: action.payload?.pagination?.totalPages || 1,
+                    totalItems: action.payload?.pagination?.totalItems || 0,
+                    itemsPerPage: action.payload?.pagination?.itemsPerPage || 10
+                };
+            })
+            .addCase(advancedSearchPosts.rejected, (state, action) => {
+                state.postsLoading = false;
+                state.postsError = action.payload || 'Advanced search failed';
+            })
+
+            // Users
             .addCase(searchUsers.pending, (state) => {
-                state.isLoading = true;
-                state.error = null;
+                state.usersLoading = true;
+                state.usersError = null;
             })
             .addCase(searchUsers.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.searchResults.users = action.payload.users || action.payload.results || [];
-                state.pagination = {
-                    currentPage: action.payload.currentPage || action.payload.page || 1,
-                    totalPages: action.payload.totalPages || action.payload.pages || 1,
-                    totalItems: action.payload.totalItems || action.payload.total || 0,
-                    itemsPerPage: action.payload.itemsPerPage || action.payload.limit || 10
+              // console.log("searc response payload :", action.payload);
+                state.usersLoading = false;
+                state.users = action.payload?.users || [];
+                state.usersPagination = {
+                    currentPage: action.payload?.pagination?.currentPage || 1,
+                    totalPages: action.payload?.pagination?.totalPages || 1,
+                    totalItems: action.payload?.pagination?.totalItems || 0,
+                    itemsPerPage: action.payload?.pagination?.itemsPerPage || 10
                 };
             })
             .addCase(searchUsers.rejected, (state, action) => {
-                state.isLoading = false;
-                state.error = action.payload || 'User search failed';
+                state.usersLoading = false;
+                state.usersError = action.payload || 'User search failed';
             })
-            
-            // Search Hashtags
+
+            // Hashtags
             .addCase(searchHashtags.pending, (state) => {
-                state.isLoading = true;
-                state.error = null;
+                state.hashtagsLoading = true;
+                state.hashtagsError = null;
             })
             .addCase(searchHashtags.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.searchResults.hashtags = action.payload.hashtags || action.payload.results || [];
-                state.pagination = {
-                    currentPage: action.payload.currentPage || action.payload.page || 1,
-                    totalPages: action.payload.totalPages || action.payload.pages || 1,
-                    totalItems: action.payload.totalItems || action.payload.total || 0,
-                    itemsPerPage: action.payload.itemsPerPage || action.payload.limit || 10
-                };
+                state.hashtagsLoading = false;
+                state.hashtags = action.payload?.hashtags || [];
             })
             .addCase(searchHashtags.rejected, (state, action) => {
-                state.isLoading = false;
-                state.error = action.payload || 'Hashtag search failed';
+                state.hashtagsLoading = false;
+                state.hashtagsError = action.payload || 'Hashtag search failed';
             })
-            
-            // Advanced Search
-            .addCase(advancedSearch.pending, (state) => {
-                state.isLoading = true;
-                state.error = null;
-            })
-            .addCase(advancedSearch.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.searchResults.posts = action.payload.results || action.payload.posts || [];
-                state.pagination = {
-                    currentPage: action.payload.currentPage || action.payload.page || 1,
-                    totalPages: action.payload.totalPages || action.payload.pages || 1,
-                    totalItems: action.payload.totalItems || action.payload.total || 0,
-                    itemsPerPage: action.payload.itemsPerPage || action.payload.limit || 10
-                };
-            })
-            .addCase(advancedSearch.rejected, (state, action) => {
-                state.isLoading = false;
-                state.error = action.payload || 'Advanced search failed';
-            })
-            
-            // Trending Topics
+
+            // Trending
             .addCase(getTrendingTopics.fulfilled, (state, action) => {
-                state.trendingTopics = action.payload.trendingTopics || action.payload.trending || action.payload.hashtags || [];
+                state.trendingTopics = action.payload?.trendingTopics || [];
             })
-            .addCase(getTrendingTopics.rejected, (state, action) => {
+            .addCase(getTrendingTopics.rejected, (state) => {
                 state.trendingTopics = [];
-                state.error = action.payload || 'Failed to load trending';
             });
     }
 });
 
 export const {
-    setSearchQuery,
-    setActiveFilter,
-    setAdvancedFilters,
-    resetAdvancedFilters,
-    clearSearchResults,
-    setPage,
+    setPostsQuery,
+    setPostsPagination,
+    setPostsFilters,
+    setPostsAdvancedFilters,
+    resetPostsAdvancedFilters,
+    clearPosts,
+    setUsersQuery,
+    setUsersPagination,
+    setUsersFilters,
+    clearUsers,
+    setHashtagsQuery,
+    clearHashtags,
+    setActiveTab,
     resetSearchState
 } = searchSlice.actions;
 

@@ -154,7 +154,7 @@ const NotificationsDialog = ({ open, setOpen }) => {
                             return (
                                 <div
                                     key={notifId}
-                                    //onClick={() => handleNotificationClick(notification)}
+                                    onClick={() => handleNotificationClick(notification)}
                                     className={`
                                         flex items-start gap-3 p-3 rounded-lg cursor-pointer
                                         transition-all duration-200

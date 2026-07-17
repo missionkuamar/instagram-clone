@@ -93,11 +93,7 @@ const authSlice = createSlice({
             state.error = null;
             console.log('🧹 [SLICE] Error cleared');
         },
-        resetAuthState: (state) => {
-            state.error = null;
-            state.isLoading = false;
-            console.log('🔄 [SLICE] Auth state reset');
-        },
+        resetAuthState: () => initialState,
         setSuggestedUsers: (state, action) => {
             state.suggestedUsers = action.payload;
              //console.log('✅ [SLICE] Suggested users updated:', action.payload);

@@ -1,34 +1,31 @@
-// controllers/searchController.js
+// controllers/searchController.js - Fixed
 import { Post } from "../models/post.model.js";
 import { User } from "../models/user.model.js";
 import Hashtag from '../models/hashtagModel.js';
 
 export const searchPosts = async (req, res) => {
     try {
-        const { q, filter = 'all', page = 1, limit = 10 } = req.query;
-        console.log("search query calling")
-        if (!q || q.trim().length === 0) {
-            return res.status(400).json({
-                success: false,
-                message: 'Search query is required'
-            });
-        }
+        const { page = 1, limit = 10, search = "", sortBy = 'createdAt', sortOrder = 'desc' } = req.query;
 
-        const skip = (parseInt(page) - 1) * parseInt(limit);
         let query = {};
 
-        // Build search query
-        if (filter === 'all' || filter === 'posts') {
-            query = {
-                $or: [
-                    { caption: { $regex: q, $options: 'i' } },
-                    { 'author.username': { $regex: q, $options: 'i' } }
-                ]
-            };
+        if (search) {
+            query.$or = [
+                { caption: { $regex: search, $options: 'i' } },
+                { 'author.username': { $regex: search, $options: 'i' } }
+            ];
         }
 
+        const pageNum = parseInt(page);
+        const limitNum = parseInt(limit);
+        const skip = (pageNum - 1) * limitNum;
+
+        const sort = {};
+        sort[sortBy] = sortOrder === 'desc' ? -1 : 1;
+
+        // ✅ Populate author details
         const posts = await Post.find(query)
-            .populate('author', 'username profilePicture')
+            .populate('author', 'username profilePicture name')
             .populate({
                 path: 'comments',
                 populate: {
@@ -36,21 +33,27 @@ export const searchPosts = async (req, res) => {
                     select: 'username profilePicture'
                 }
             })
-            .sort({ createdAt: -1 })
+            .sort(sort)
             .skip(skip)
-            .limit(parseInt(limit));
+            .limit(limitNum);
 
-        const totalItems = await Post.countDocuments(query);
-        const totalPages = Math.ceil(totalItems / parseInt(limit));
+        const total = await Post.countDocuments(query);
 
-        return res.status(200).json({
+        console.log('Posts found:', posts.length);
+
+        res.status(200).json({
             success: true,
-            posts,
-            currentPage: parseInt(page),
-            totalPages,
-            totalItems,
-            itemsPerPage: parseInt(limit)
+            posts: posts, // ✅ Send as 'posts'
+            pagination: {
+                currentPage: pageNum,
+                totalPages: Math.ceil(total / limitNum),
+                totalItems: total,
+                itemsPerPage: limitNum,
+                hasNextPage: pageNum < Math.ceil(total / limitNum),
+                hasPrevPage: pageNum > 1,
+            }
         });
+
     } catch (error) {
         console.error('Search posts error:', error);
         return res.status(500).json({
@@ -60,43 +63,80 @@ export const searchPosts = async (req, res) => {
     }
 };
 
-export const searchUsers = async (req, res) => {
+export const getPostById = async (req, res) => {
     try {
-        const { q, page = 1, limit = 10 } = req.query;
-        
-        if (!q || q.trim().length === 0) {
-            return res.status(400).json({
+        const post = await Post.findById(req.params.id)
+            .populate('author', 'username profilePicture name')
+            .populate({
+                path: 'comments',
+                populate: {
+                    path: 'author',
+                    select: 'username profilePicture'
+                }
+            });
+
+        if (!post) {
+            return res.status(404).json({
                 success: false,
-                message: 'Search query is required'
+                message: 'Post not found',
             });
         }
 
-        const skip = (parseInt(page) - 1) * parseInt(limit);
-        
-        const users = await User.find({
-            $or: [
-                { username: { $regex: q, $options: 'i' } },
-                { name: { $regex: q, $options: 'i' } },
-                { email: { $regex: q, $options: 'i' } }
-            ]
-        })
-        .select('-password')
-        .skip(skip)
-        .limit(parseInt(limit));
-
-        const totalItems = await User.countDocuments({
-            $or: [
-                { username: { $regex: q, $options: 'i' } },
-                { name: { $regex: q, $options: 'i' } },
-                { email: { $regex: q, $options: 'i' } }
-            ]
-        });
-
-        return res.status(200).json({
+        console.log('Post found:', post._id);
+        res.status(200).json({
             success: true,
-            users,
-            totalItems,
-            currentPage: parseInt(page)
+            post: post // ✅ Send as 'post'
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Internal server error',
+        });
+    }
+};
+
+export const searchUsers = async (req, res) => {
+    try {
+        const { page = 1, limit = 10, search = "", sortBy = 'createdAt', sortOrder = 'desc' } = req.query;
+
+        let query = {};
+        if (search) {
+            query.$or = [
+                { username: { $regex: search, $options: 'i' } },
+                { name: { $regex: search, $options: 'i' } },
+                { email: { $regex: search, $options: 'i' } },
+            ];
+        }
+
+        const pageNum = parseInt(page);
+        const limitNum = parseInt(limit);
+        const skip = (pageNum - 1) * limitNum;
+
+        const sort = {};
+        sort[sortBy] = sortOrder === 'desc' ? -1 : 1;
+
+        const users = await User.find(query)
+            .select('-password')
+            .sort(sort)
+            .skip(skip)
+            .limit(limitNum);
+
+        const total = await User.countDocuments(query);
+
+        console.log('Users found:', users.length);
+
+        res.status(200).json({
+            success: true,
+            users: users, // ✅ Send as 'users'
+            pagination: {
+                currentPage: pageNum,
+                totalPages: Math.ceil(total / limitNum),
+                totalItems: total,
+                itemsPerPage: limitNum,
+                hasNextPage: pageNum < Math.ceil(total / limitNum),
+                hasPrevPage: pageNum > 1,
+            }
         });
     } catch (error) {
         console.error('Search users error:', error);
@@ -107,10 +147,34 @@ export const searchUsers = async (req, res) => {
     }
 };
 
+export const getUserById = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id).select('-password');
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found',
+            });
+        }
+
+        console.log('User found:', user._id);
+        res.status(200).json({
+            success: true,
+            user: user, // ✅ Send as 'user'
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Internal server error',
+        });
+    }
+};
+
 export const searchHashtags = async (req, res) => {
     try {
         const { q, page = 1, limit = 10 } = req.query;
-        
+
         if (!q || q.trim().length === 0) {
             return res.status(400).json({
                 success: false,
@@ -118,22 +182,34 @@ export const searchHashtags = async (req, res) => {
             });
         }
 
+        const pageNum = parseInt(page);
+        const limitNum = parseInt(limit);
+        const skip = (pageNum - 1) * limitNum;
+
         const hashtags = await Hashtag.find({
             tag: { $regex: q, $options: 'i' }
         })
-        .sort({ postsCount: -1 })
-        .skip((parseInt(page) - 1) * parseInt(limit))
-        .limit(parseInt(limit));
+            .sort({ postsCount: -1 })
+            .skip(skip)
+            .limit(limitNum);
 
         const totalItems = await Hashtag.countDocuments({
             tag: { $regex: q, $options: 'i' }
         });
 
+        console.log('Hashtags found:', hashtags.length);
+
         return res.status(200).json({
             success: true,
-            hashtags,
-            totalItems,
-            currentPage: parseInt(page)
+            hashtags: hashtags, // ✅ Send as 'hashtags'
+            pagination: {
+                currentPage: pageNum,
+                totalPages: Math.ceil(totalItems / limitNum),
+                totalItems: totalItems,
+                itemsPerPage: limitNum,
+                hasNextPage: pageNum < Math.ceil(totalItems / limitNum),
+                hasPrevPage: pageNum > 1,
+            }
         });
     } catch (error) {
         console.error('Search hashtags error:', error);
@@ -173,18 +249,26 @@ export const advancedSearch = async (req, res) => {
             if (endDate) searchQuery.createdAt.$lte = new Date(endDate);
         }
 
-        // Likes filter
-        if (minLikes > 0 || maxLikes) {
-            searchQuery['likes._id'] = {};
-            if (minLikes > 0) searchQuery['likes._id'].$gte = minLikes;
-            if (maxLikes) searchQuery['likes._id'].$lte = maxLikes;
+        // Likes filter - Fixed
+        if (minLikes > 0) {
+            searchQuery['likes'] = { $size: { $gte: minLikes } };
+        }
+        if (maxLikes) {
+            searchQuery['likes'] = { $size: { $lte: maxLikes } };
+        }
+        if (minLikes > 0 && maxLikes) {
+            searchQuery['likes'] = { $size: { $gte: minLikes, $lte: maxLikes } };
         }
 
-        // Comments filter
-        if (minComments > 0 || maxComments) {
-            searchQuery['comments._id'] = {};
-            if (minComments > 0) searchQuery['comments._id'].$gte = minComments;
-            if (maxComments) searchQuery['comments._id'].$lte = maxComments;
+        // Comments filter - Fixed
+        if (minComments > 0) {
+            searchQuery['comments'] = { $size: { $gte: minComments } };
+        }
+        if (maxComments) {
+            searchQuery['comments'] = { $size: { $lte: maxComments } };
+        }
+        if (minComments > 0 && maxComments) {
+            searchQuery['comments'] = { $size: { $gte: minComments, $lte: maxComments } };
         }
 
         // Sorting
@@ -194,19 +278,21 @@ export const advancedSearch = async (req, res) => {
                 sortOptions = { createdAt: -1 };
                 break;
             case 'popular':
-                sortOptions = { 'likes.length': -1 };
+                sortOptions = { 'likes': -1 };
                 break;
             case 'mostCommented':
-                sortOptions = { 'comments.length': -1 };
+                sortOptions = { 'comments': -1 };
                 break;
             default:
                 sortOptions = { createdAt: -1 };
         }
 
-        const skip = (parseInt(page) - 1) * parseInt(limit);
-        
+        const pageNum = parseInt(page);
+        const limitNum = parseInt(limit);
+        const skip = (pageNum - 1) * limitNum;
+
         const posts = await Post.find(searchQuery)
-            .populate('author', 'username profilePicture')
+            .populate('author', 'username profilePicture name')
             .populate({
                 path: 'comments',
                 populate: {
@@ -216,17 +302,21 @@ export const advancedSearch = async (req, res) => {
             })
             .sort(sortOptions)
             .skip(skip)
-            .limit(parseInt(limit));
+            .limit(limitNum);
 
         const totalItems = await Post.countDocuments(searchQuery);
 
         return res.status(200).json({
             success: true,
-            results: posts,
-            totalItems,
-            currentPage: parseInt(page),
-            totalPages: Math.ceil(totalItems / parseInt(limit)),
-            itemsPerPage: parseInt(limit)
+            posts: posts, // ✅ Send as 'posts'
+            pagination: {
+                currentPage: pageNum,
+                totalPages: Math.ceil(totalItems / limitNum),
+                totalItems: totalItems,
+                itemsPerPage: limitNum,
+                hasNextPage: pageNum < Math.ceil(totalItems / limitNum),
+                hasPrevPage: pageNum > 1,
+            }
         });
     } catch (error) {
         console.error('Advanced search error:', error);
@@ -244,21 +334,23 @@ export const getTrending = async (req, res) => {
             .sort({ postsCount: -1 })
             .limit(10);
 
-        // Get trending posts (most liked in last 7 days)
-        const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        // Get trending posts (most liked)
+        const trendingPosts = await Post.find()
+            .populate('author', 'username profilePicture name')
+            .sort({ likes: -1 })
+            .limit(10);
 
-        const trendingPosts = await Post.find({
-            createdAt: { $gte: sevenDaysAgo }
-        })
-        .populate('author', 'username profilePicture')
-        .sort({ 'likes.length': -1 })
-        .limit(10);
+        // Format trending topics for frontend
+        const trendingTopics = trendingHashtags.map(h => ({
+            tag: h.tag,
+            postsCount: h.postsCount || 0,
+            posts: h.postsCount || 0
+        }));
 
         return res.status(200).json({
             success: true,
-            trendingHashtags,
-            trendingPosts
+            trendingTopics: trendingTopics, // ✅ Send as 'trendingTopics'
+            trendingPosts: trendingPosts
         });
     } catch (error) {
         console.error('Get trending error:', error);

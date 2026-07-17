@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit"
-
+const initialState = {
+        posts: [],
+    }
 
 const postSlice = createSlice({
     name: 'post',
-    initialState: {
-        posts: [],
-    },
+    initialState,
     reducers: {
+        resetPostsState:() => initialState,
         setPosts:(state, action) => {
             state.posts = action.payload;
             //console.log('📌 [SLICE] Posts updated:', state.posts);
@@ -50,6 +51,6 @@ setSelectedPost: (state, action) => {
     }
 });
 
-export const { setPosts, deletePost, updatePostLike, setSelectedPost, updatePostComments } = postSlice.actions;
+export const { setPosts, deletePost, updatePostLike, setSelectedPost, updatePostComments, resetPostsState } = postSlice.actions;
 
 export default postSlice.reducer;

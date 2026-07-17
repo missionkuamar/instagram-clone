@@ -1,11 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const  initialState = {
+        likeNotification: [],
+    }
+
 const rtnSlice = createSlice({
     name: 'realTimeNotification',
-    initialState: {
-        likeNotification: [],
-    },
+   initialState,
     reducers: {
+        resetRealTimeNotificationState: () => initialState,
         setLikeNotification: (state, action) => {
             if (action.payload.type === 'like') {
                 // Add new notification with read: false
@@ -48,7 +51,8 @@ export const {
     setLikeNotification, 
     markNotificationsAsRead, 
     markSingleNotificationAsRead,
-    clearAllNotifications 
+    clearAllNotifications,
+    resetRealTimeNotificationState, 
 } = rtnSlice.actions;
 
 export default rtnSlice.reducer;

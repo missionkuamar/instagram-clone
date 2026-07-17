@@ -33,7 +33,7 @@ axiosInstance.interceptors.request.use(
       //console.log("Body: FormData");
       delete config.headers["Content-Type"];
     } else {
-      console.log("Body:", config.data);
+      //console.log("Body:", config.data);
     }
 
     console.groupEnd();

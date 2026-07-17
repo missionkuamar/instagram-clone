@@ -9,7 +9,7 @@ import Profile from './pages/Profile'
 import Home from './pages/Home'
 import MainLayout from './pages/MainLayout'
 import ProtectedRoutes from './components/ProtectedRoutes'
-import Search from "./pages/Search";
+
 import { io } from 'socket.io-client'
 import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
@@ -19,6 +19,7 @@ import { setOnlineUsers } from './features/chat/chatSlice'
 import Explore from "./pages/Explore";
 import { setLikeNotification } from './features/rtnslice/notification'
 import PostDetail from './pages/PostDetail'
+import Search from "./pages/Search";
 const browserRouter = createBrowserRouter([
   {
     path: "/",
@@ -49,7 +50,7 @@ const browserRouter = createBrowserRouter([
         element: <ProtectedRoutes><ChatPage /></ProtectedRoutes>
       },
       {
-      path: "/post/:id", element: <ProtectedRoutes><PostDetail /></ProtectedRoutes>
+      path: "/post/:id", element: <ProtectedRoutes><PostDetail/></ProtectedRoutes>
 
       }
     ]

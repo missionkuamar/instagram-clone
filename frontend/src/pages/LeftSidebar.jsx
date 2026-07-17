@@ -1,11 +1,16 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { logoutUser } from '@/features/auth/authSlice';
+import { logoutUser, resetAuthState } from '@/features/auth/authSlice';
 import { Heart, Home, LogOut, MessageCircle, PlusSquare, Search, TrendingUp, Sun, Moon, Menu, X } from 'lucide-react';
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom'
 import CreatePost from './CreatePost';
 import NotificationsDialog from './NotificationsDialog';
+import {resetSearchState, } from '@/features/search/searchSlice';
+import { resetPostsState } from '@/features/post/postSlice';
+import { resetChatState } from '@/features/chat/chatSlice';
+import { resetSocketState } from '@/features/socket/SocketSlice';
+import { resetRealTimeNotificationState } from '@/features/rtnslice/notification';
 
 const LeftSidebar = () => {
     const navigate = useNavigate();
@@ -39,34 +44,41 @@ const LeftSidebar = () => {
     // ✅ Count unread notifications
     const unreadCount = likeNotification?.filter(notif => !notif.read)?.length || 0;
 
-    const sidebarHandler = (textType) => {
-        if (textType === 'Logout') {
-            dispatch(logoutUser());
-        }
-        else if (textType === "Create") {
-            setOpenCreatePost(true);
-        }
-        else if (textType === "Profile") {
-            navigate(`/profile/${user?._id}`);
-        }
-        else if (textType === "Home") {
-            navigate("/");
-        }
-        else if (textType === "Message") {
-            navigate("/chat");
-        }
-        else if (textType === "Search") {
-            navigate("/search");
-        }
-        else if (textType === "Explore") {
-            navigate("/explore");
-        }
-        else if (textType === "Notifications") {
-            setOpenNotifications(true);
-        }
+    const sidebarHandler = async (textType) => {
+    if (textType === "Logout") {
+        try {
+            await dispatch(logoutUser()).unwrap();
 
-        setIsMobileOpen(false);
+            dispatch(resetAuthState());
+            dispatch(resetPostsState());
+            dispatch(resetChatState());
+            dispatch(resetSearchState());
+
+            dispatch(resetSocketState());
+             dispatch(resetRealTimeNotificationState());
+
+            navigate("/login");
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    } else if (textType === "Create") {
+        setOpenCreatePost(true);
+    } else if (textType === "Profile") {
+        navigate(`/profile/${user?._id}`);
+    } else if (textType === "Home") {
+        navigate("/");
+    } else if (textType === "Message") {
+        navigate("/chat");
+    } else if (textType === "Search") {
+        navigate("/search");
+    } else if (textType === "Explore") {
+        navigate("/explore");
+    } else if (textType === "Notifications") {
+        setOpenNotifications(true);
     }
+
+    setIsMobileOpen(false);
+};
 
     const isActive = (text) => {
         if (text === 'Home' && (location.pathname === '/' || location.pathname === '')) return true;
@@ -81,7 +93,7 @@ const LeftSidebar = () => {
         { icon: <Search size={22} />, text: 'Search' },
         { icon: <TrendingUp size={22} />, text: 'Explore' },
         { icon: <MessageCircle size={22} />, text: 'Message' },
-        { 
+        {
             icon: (
                 <div className="relative">
                     <Heart size={22} />
@@ -91,8 +103,8 @@ const LeftSidebar = () => {
                         </span>
                     )}
                 </div>
-            ), 
-            text: "Notifications" 
+            ),
+            text: "Notifications"
         },
         { icon: <PlusSquare size={22} />, text: "Create" },
         {
@@ -112,9 +124,9 @@ const LeftSidebar = () => {
     return (
         <>
             <CreatePost open={openCreatePost} setOpen={setOpenCreatePost} />
-            
-            <NotificationsDialog 
-                open={openNotifications} 
+
+            <NotificationsDialog
+                open={openNotifications}
                 setOpen={setOpenNotifications}
             />
 
