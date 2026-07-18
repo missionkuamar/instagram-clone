@@ -20,12 +20,13 @@ const UsersSearch = () => {
         usersPagination,
         usersQuery,
         usersFilters
-    } = useSelector((state) => state.search);
-console.log("usersPagination : ", usersPagination)
-console.log("usersPagination currentPerPage: ", usersPagination.currentPage)
-console.log("usersPagination totalPages : ", usersPagination.totalPages)
-console.log("usersPagination totalItems: ", usersPagination.totalItems)
-console.log("usersPagination itemsPerPage: ", usersPagination.itemsPerPage)
+    } = useSelector((state) => state?.search);
+
+// console.log("usersPagination : ", usersPagination)
+// console.log("usersPagination currentPerPage: ", usersPagination?.currentPage)
+// console.log("usersPagination totalPages : ", usersPagination?.totalPages)
+// console.log("usersPagination totalItems: ", usersPagination?.totalItems)
+// console.log("usersPagination itemsPerPage: ", usersPagination?.itemsPerPage)
 
 
     const [localQuery, setLocalQuery] = useState(usersQuery || '');
@@ -40,10 +41,10 @@ console.log("usersPagination itemsPerPage: ", usersPagination.itemsPerPage)
             query: searchQuery,
             page,
             limit,
-            sortBy: usersFilters.sortBy,
-            sortOrder: usersFilters.sortOrder
+            sortBy: usersFilters?.sortBy,
+            sortOrder: usersFilters?.sortOrder
         }));
-    }, [dispatch, limit, usersFilters.sortBy, usersFilters.sortOrder]);
+    }, [dispatch, limit, usersFilters?.sortBy, usersFilters?.sortOrder]);
 
 
 useEffect(() => {
@@ -60,7 +61,7 @@ useEffect(() => {
     // Debounce search
     useEffect(() => {
         const timer = setTimeout(() => {
-            if (localQuery.trim()) {
+            if (localQuery?.trim()) {
                 handleSearch(localQuery);
             } 
         }, 500);
@@ -96,7 +97,7 @@ useEffect(() => {
 
     // Pagination
     const handlePageChange = (newPage) => {
-        if (newPage >= 1 && newPage <= usersPagination.totalPages) {
+        if (newPage >= 1 && newPage <= usersPagination?.totalPages) {
             handleSearch(localQuery, newPage);
         }
     };
@@ -119,15 +120,15 @@ useEffect(() => {
         query: localQuery,
         page: 1,
         limit: parsedLimit,
-        sortBy: usersFilters.sortBy,
-        sortOrder: usersFilters.sortOrder,
+        sortBy: usersFilters?.sortBy,
+        sortOrder: usersFilters?.sortOrder,
     }));
 };
 
     // Sort change
     const handleSortChange = (field, value) => {
         dispatch(setUsersFilters({ [field]: value }));
-        if (localQuery.trim()) {
+        if (localQuery?.trim()) {
             handleSearch(localQuery, 1);
         }
     };
@@ -137,22 +138,22 @@ useEffect(() => {
         if (!user) return null;
         return (
             <div
-                key={user._id}
-                onClick={() => navigate(`/profile/${user._id}`)}
+                key={user?._id}
+                onClick={() => navigate(`/profile/${user?._id}`)}
                 className="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl cursor-pointer transition-all border border-gray-100 dark:border-gray-800"
             >
                 <Avatar className="w-12 h-12">
-                    <AvatarImage src={user.profilePicture} />
+                    <AvatarImage src={user?.profilePicture} />
                     <AvatarFallback className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
-                        {user.username?.charAt(0).toUpperCase() || 'U'}
+                        {user?.username?.charAt(0).toUpperCase() || 'U'}
                     </AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
-                    <p className="font-semibold text-gray-800 dark:text-white">{user.username}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{user.name || user.fullName || 'No name'}</p>
+                    <p className="font-semibold text-gray-800 dark:text-white">{user?.username}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{user?.name || user?.fullName || 'No name'}</p>
                     <div className="flex items-center gap-3 mt-1 text-xs text-gray-400">
-                        <span>{user.followers?.length || 0} followers</span>
-                        <span>{user.following?.length || 0} following</span>
+                        <span>{user?.followers?.length || 0} followers</span>
+                        <span>{user?.following?.length || 0} following</span>
                     </div>
                 </div>
                 <Button variant="outline" size="sm">View Profile</Button>
@@ -185,7 +186,7 @@ useEffect(() => {
             {/* Toolbar */}
             <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
-                    <Select value={limit.toString()} onValueChange={handleLimitChange}>
+                    <Select value={limit?.toString()} onValueChange={handleLimitChange}>
                         <SelectTrigger className="w-20 h-8 text-xs">
                             <SelectValue placeholder="10" />
                         </SelectTrigger>
@@ -202,7 +203,7 @@ useEffect(() => {
                     </Select>
 
                     <Select
-                        value={usersFilters.sortBy}
+                        value={usersFilters?.sortBy}
                         onValueChange={(value) => handleSortChange('sortBy', value)}
                     >
                         <SelectTrigger className="w-28 h-8 text-xs">
@@ -220,7 +221,7 @@ useEffect(() => {
                     </Select>
 
                     <Select
-                        value={usersFilters.sortOrder}
+                        value={usersFilters?.sortOrder}
                         onValueChange={(value) => handleSortChange('sortOrder', value)}
                     >
                         <SelectTrigger className="w-24 h-8 text-xs">
@@ -245,7 +246,7 @@ useEffect(() => {
                         <Skeleton key={i} className="h-20 rounded-xl" />
                     ))}
                 </div>
-            ) : localQuery && users.length === 0 ? (
+            ) : localQuery && users?.length === 0 ? (
                 <div className="text-center py-12">
                     <User size={40} className="mx-auto text-gray-400 mb-3" />
                     <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">No users found</h3>
@@ -254,31 +255,31 @@ useEffect(() => {
             ) : users?.length > 0 && (
                 <>
                     <div className="text-sm text-gray-500">
-                        Showing {users.length} of {usersPagination.totalItems} users
+                        Showing {users?.length} of {usersPagination?.totalItems} users
                     </div>
                     <div className="space-y-2">
-                        {users.map(renderUserCard)}
+                        {users?.map(renderUserCard)}
                     </div>
 
                     {/* Pagination */}
-                    {usersPagination.totalPages > 0 && (
+                    {usersPagination?.totalPages > 0 && (
                         <div className="flex items-center justify-center gap-2 pt-4">
                             <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => handlePageChange(usersPagination.currentPage - 1)}
-                                disabled={usersPagination.currentPage === 1 || usersLoading}
+                                onClick={() => handlePageChange(usersPagination?.currentPage - 1)}
+                                disabled={usersPagination?.currentPage === 1 || usersLoading}
                             >
                                 <ChevronLeft size={16} />
                             </Button>
                             <span className="text-sm">
-                                Page {usersPagination.currentPage} of {usersPagination.totalPages}
+                                Page {usersPagination?.currentPage} of {usersPagination?.totalPages}
                             </span>
                             <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => handlePageChange(usersPagination.currentPage + 1)}
-                                disabled={usersPagination.currentPage === usersPagination.totalPages || usersLoading}
+                                onClick={() => handlePageChange(usersPagination?.currentPage + 1)}
+                                disabled={usersPagination?.currentPage === usersPagination?.totalPages || usersLoading}
                             >
                                 <ChevronRight size={16} />
                             </Button>

@@ -13,7 +13,7 @@ import { app, server } from "./socket/socket.js";
 dotenv.config();
 
 const PORT = process.env.PORT || 8000;
-const _dirname = path.resolve();
+const __dirname = path.resolve();
 
 console.log("===================================");
 console.log("🚀 SERVER STARTING...");
@@ -103,13 +103,13 @@ app.use("/api/v1/message", messageRoute);
 // 404
 // =====================
 
-app.use((req, res) => {
-    console.log("❌ ROUTE NOT FOUND");
-    res.status(404).json({
-        success: false,
-        message: "Route Not Found"
-    });
-});
+// app.use((req, res) => {
+//     console.log("❌ ROUTE NOT FOUND");
+//     res.status(404).json({
+//         success: false,
+//         message: "Route Not Found"
+//     });
+// });
 
 // =====================
 // ERROR HANDLER
@@ -126,11 +126,11 @@ app.use((err, req, res, next) => {
 });
 
 // Serve static files from the 'client/dist' folder
-app.use(express.static(path.join(_dirname, 'frontend', 'dist')));
+app.use(express.static(path.join(__dirname, 'frontend', 'dist')));
 
 // Catch-all route to serve index.html for frontend React app (This should be last)
 app.use((req, res, next) => {
-  res.sendFile(path.join(_dirname, 'frontend', 'dist', 'index.html'));
+  res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'));
 });
 // =====================
 // START SERVER

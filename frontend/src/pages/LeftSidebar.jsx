@@ -168,7 +168,7 @@ const LeftSidebar = () => {
                     </div>
 
                     {/* Menu Items */}
-                    <div className='flex-1 px-3 py-4'>
+                    <div className='flex-1 px-3 py-4 z-50'>
                         {sidebarItems.map((item, index) => {
                             const active = isActive(item.text);
                             return (

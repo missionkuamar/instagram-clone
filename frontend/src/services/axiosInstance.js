@@ -2,7 +2,7 @@ import axios from "axios";
 import { toast } from "sonner";
 
 const API_BASE_URL = "http://localhost:8000/api/v1";
-
+//https://instagram-clone-3r60.onrender.com
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true,

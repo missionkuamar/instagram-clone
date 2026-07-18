@@ -51,11 +51,11 @@ const PostsSearch = () => {
         query: searchQuery,
         page,
         limit,
-        sortBy: postsFilters.sortBy,
-        sortOrder: postsFilters.sortOrder
+        sortBy: postsFilters?.sortBy,
+         sortOrder: postsFilters?.sortOrder
     }));
 
-}, [dispatch, limit, postsFilters.sortBy, postsFilters.sortOrder]);
+}, [dispatch, limit, postsFilters?.sortBy, postsFilters?.sortOrder]);
 
 
 
@@ -68,8 +68,8 @@ const PostsSearch = () => {
                     query: "",
                     page: 1,
                     limit,
-                    sortBy: postsFilters.sortBy,
-                    sortOrder: postsFilters.sortOrder,
+                    sortBy: postsFilters?.sortBy,
+                    sortOrder: postsFilters?.sortOrder,
                 }));
             }
         }, 500);
@@ -134,7 +134,7 @@ const PostsSearch = () => {
 
     // Pagination
     const handlePageChange = (newPage) => {
-        if (newPage >= 1 && newPage <= postsPagination.totalPages) {
+        if (newPage >= 1 && newPage <= postsPagination?.totalPages) {
             handleSearch(localQuery, newPage);
         }
     };
@@ -161,13 +161,13 @@ const PostsSearch = () => {
         if (!post) return null;
         return (
             <div
-                key={post._id}
-                onClick={() => navigate(`/post/${post._id}`)}
+                key={post?._id}
+                onClick={() => navigate(`/post/${post?._id}`)}
                 className="group relative overflow-hidden rounded-xl cursor-pointer aspect-square bg-gray-100 dark:bg-gray-800"
             >
                 <img
-                    src={post.image || post.imageUrl}
-                    alt={post.caption || 'Post'}
+                    src={post?.image || post?.imageUrl}
+                    alt={post?.caption || 'Post'}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                     loading="lazy"
                     onError={(e) => {
@@ -177,19 +177,19 @@ const PostsSearch = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
                     <div className="flex items-center gap-2 text-white">
                         <Avatar className="w-6 h-6">
-                            <AvatarImage src={post.author?.profilePicture} />
+                            <AvatarImage src={post?.author?.profilePicture} />
                             <AvatarFallback className="bg-purple-500 text-white text-xs">
-                                {post.author?.username?.charAt(0).toUpperCase() || 'U'}
+                                {post?.author?.username?.charAt(0).toUpperCase() || 'U'}
                             </AvatarFallback>
                         </Avatar>
                         <span className="text-sm font-medium">{post.author?.username || 'Unknown'}</span>
                     </div>
                     <div className="flex items-center gap-4 mt-2 text-white/90">
                         <span className="flex items-center gap-1 text-xs">
-                            <Heart size={14} className="fill-white" /> {post.likes?.length || 0}
+                            <Heart size={14} className="fill-white" /> {post?.likes?.length || 0}
                         </span>
                         <span className="flex items-center gap-1 text-xs">
-                            <MessageCircle size={14} /> {post.comments?.length || 0}
+                            <MessageCircle size={14} /> {post?.comments?.length || 0}
                         </span>
                     </div>
                 </div>
@@ -232,7 +232,7 @@ const PostsSearch = () => {
             {/* Toolbar */}
             <div className="flex flex-wrap items-center justify-between gap-4 ">
                 <div className="flex flex-wrap items-center gap-3">
-                    <Select value={limit.toString()} onValueChange={handleLimitChange}
+                    <Select value={limit?.toString()} onValueChange={handleLimitChange}
                         >
                         <SelectTrigger className="w-20 h-8 text-xs">
                             <SelectValue placeholder="10" />
@@ -251,7 +251,7 @@ const PostsSearch = () => {
                     </Select>
 
                     <Select
-                        value={postsFilters.sortBy}
+                        value={postsFilters?.sortBy}
                         onValueChange={(value) => handleSortChange('sortBy', value)}
                     >
                         <SelectTrigger className="w-28 h-8 text-xs">
@@ -269,7 +269,7 @@ const PostsSearch = () => {
                     </Select>
 
                     <Select
-                        value={postsFilters.sortOrder}
+                        value={postsFilters?.sortOrder}
                         onValueChange={(value) => handleSortChange('sortOrder', value)}
                     >
                         <SelectTrigger className="w-24 h-8 text-xs">
@@ -390,7 +390,7 @@ const PostsSearch = () => {
                         <Skeleton key={i} className="aspect-square rounded-xl" />
                     ))}
                 </div>
-            ) : localQuery && posts.length === 0 ? (
+            ) : localQuery && posts?.length === 0 ? (
                 <div className="text-center py-12">
                     <Search size={40} className="mx-auto text-gray-400 mb-3" />
                     <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">No posts found</h3>
@@ -399,34 +399,34 @@ const PostsSearch = () => {
             ) : posts?.length > 0 && (
                 <>
                     <div className="text-sm text-gray-500">
-                        Showing {posts.length} of {postsPagination.totalItems} posts
+                        Showing {posts?.length} of {postsPagination?.totalItems} posts
                     </div>
                     <div className={viewMode === 'grid'
                         ? 'grid grid-cols-2 sm:grid-cols-3 gap-4'
                         : 'space-y-3'
                     }>
-                        {posts.map(renderPostCard)}
+                        {posts?.map(renderPostCard)}
                     </div>
 
                     {/* Pagination */}
-                    {postsPagination.totalPages > 1 && (
+                    {postsPagination?.totalPages > 1 && (
                         <div className="flex items-center justify-center gap-2 pt-4">
                             <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => handlePageChange(postsPagination.currentPage - 1)}
-                                disabled={postsPagination.currentPage === 1 || postsLoading}
+                                onClick={() => handlePageChange(postsPagination?.currentPage - 1)}
+                                disabled={postsPagination?.currentPage === 1 || postsLoading}
                             >
                                 <ChevronLeft size={16} />
                             </Button>
                             <span className="text-sm">
-                                Page {postsPagination.currentPage} of {postsPagination.totalPages}
+                                Page {postsPagination?.currentPage} of {postsPagination?.totalPages}
                             </span>
                             <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => handlePageChange(postsPagination.currentPage + 1)}
-                                disabled={postsPagination.currentPage === postsPagination.totalPages || postsLoading}
+                                onClick={() => handlePageChange(postsPagination?.currentPage + 1)}
+                                disabled={postsPagination?.currentPage === postsPagination?.totalPages || postsLoading}
                             >
                                 <ChevronRight size={16} />
                             </Button>
