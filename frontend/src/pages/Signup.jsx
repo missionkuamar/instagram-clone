@@ -55,7 +55,10 @@ const Signup = () => {
             navigate("/login");
             setInput({ username: "", email: "", password: "" });
         } catch (error) {
-            console.error('💥 Registration failed with error:', error);
+          //  console.error('💥 Registration failed with error:', error);
+           toast.error(
+    error.response?.data?.message || "Something went wrong"
+  );
             // Error is already handled by the slice and service
         }
     }

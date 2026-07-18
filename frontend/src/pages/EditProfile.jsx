@@ -55,7 +55,10 @@ const EditProfile = () => {
     //   fileType: input.profilePhoto.type
     // });
   } else {
-    console.log('🔍 STEP 2 - No new file selected, keeping existing photo');
+   // console.log('🔍 STEP 2 - No new file selected, keeping existing photo');
+    toast.error(
+     "Something went wrong in edit profile handler"
+  );
   }
 
   // 🔍 STEP 3: Check FormData contents (iterate through all entries)
@@ -64,7 +67,10 @@ const EditProfile = () => {
     if (pair[0] === 'profilePhoto' && pair[1] instanceof File) {
       //console.log(`   ${pair[0]}: [File] ${pair[1].name} (${pair[1].size} bytes)`);
     } else {
-      console.log(`   ${pair[0]}: ${pair[1]}`);
+    //  console.log(`   ${pair[0]}: ${pair[1]}`);
+     toast.error(
+    "Something went wrong"
+  );
     }
   }
 
@@ -110,17 +116,20 @@ const EditProfile = () => {
       navigate(`/profile/${user?._id}`);
       toast.success(res.data.message);
     } else {
-      console.warn('🔍 STEP 6 - Response success false:', res.data);
+    //  console.warn('🔍 STEP 6 - Response success false:', res.data);
+     toast.error(
+   "Something went wrong"
+  );
     }
   } catch (error) {
     // 🔍 ERROR HANDLING: Detailed error logging
-    console.error('🔍 ERROR - Full error object:', error);
-    console.error('🔍 ERROR - Response:', error.response);
-    console.error('🔍 ERROR - Response data:', error.response?.data);
-    console.error('🔍 ERROR - Response status:', error.response?.status);
-    console.error('🔍 ERROR - Response headers:', error.response?.headers);
-    console.error('🔍 ERROR - Request config:', error.config);
-    console.error('🔍 ERROR - Message:', error.message);
+    // console.error('🔍 ERROR - Full error object:', error);
+    // console.error('🔍 ERROR - Response:', error.response);
+    // console.error('🔍 ERROR - Response data:', error.response?.data);
+    // console.error('🔍 ERROR - Response status:', error.response?.status);
+    // console.error('🔍 ERROR - Response headers:', error.response?.headers);
+    // console.error('🔍 ERROR - Request config:', error.config);
+    // console.error('🔍 ERROR - Message:', error.message);
     
     if (error.code === 'ECONNABORTED') {
       toast.error('Request timeout. Please try again.');

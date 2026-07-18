@@ -32,7 +32,12 @@ export const register = async (req, res) => {
             success: true,
         });
     } catch (error) {
-        console.log(error);
+      //  console.log(error);
+       return res.status(500).json({
+            message: error.message || 'Internal server error',
+            success: false,
+            error: error.message
+        });
     }
 }
 export const login = async (req, res) => {
@@ -88,7 +93,12 @@ export const login = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
+       // console.log(error);
+        return res.status(500).json({
+            message: error.message || 'Internal server error',
+            success: false,
+            error: error.message
+        });
     }
 };
 export const logout = async (_, res) => {
@@ -98,7 +108,12 @@ export const logout = async (_, res) => {
             success: true
         });
     } catch (error) {
-        console.log(error);
+       // console.log(error);
+        return res.status(500).json({
+            message: error.message || 'Internal server error',
+            success: false,
+            error: error.message
+        });
     }
 };
 export const getProfile = async (req, res) => {
@@ -110,7 +125,12 @@ export const getProfile = async (req, res) => {
             success: true
         });
     } catch (error) {
-        console.log(error);
+        //console.log(error);
+         return res.status(500).json({
+            message: error.message || 'Internal server error',
+            success: false,
+            error: error.message
+        });
     }
 };
 
@@ -146,7 +166,12 @@ export const editProfile = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
+       // console.log(error);
+        return res.status(500).json({
+            message: error.message || 'Internal server error',
+            success: false,
+            error: error.message
+        });
     }
 };
 export const getSuggestedUsers = async (req, res) => {

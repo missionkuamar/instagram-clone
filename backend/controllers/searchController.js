@@ -55,7 +55,7 @@ export const searchPosts = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Search posts error:', error);
+       // console.error('Search posts error:', error);
         return res.status(500).json({
             success: false,
             message: error.message || 'Failed to search posts'
@@ -88,7 +88,7 @@ export const getPostById = async (req, res) => {
             post: post // ✅ Send as 'post'
         });
     } catch (error) {
-        console.log(error);
+      //  console.log(error);
         res.status(500).json({
             success: false,
             message: error.message || 'Internal server error',
@@ -139,7 +139,7 @@ export const searchUsers = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error('Search users error:', error);
+     //   console.error('Search users error:', error);
         return res.status(500).json({
             success: false,
             message: error.message || 'Failed to search users'
@@ -212,7 +212,7 @@ export const searchHashtags = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error('Search hashtags error:', error);
+       // console.error('Search hashtags error:', error);
         return res.status(500).json({
             success: false,
             message: error.message || 'Failed to search hashtags'
@@ -319,7 +319,7 @@ export const advancedSearch = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error('Advanced search error:', error);
+        //console.error('Advanced search error:', error);
         return res.status(500).json({
             success: false,
             message: error.message || 'Failed to perform advanced search'
@@ -353,7 +353,7 @@ export const getTrending = async (req, res) => {
             trendingPosts: trendingPosts
         });
     } catch (error) {
-        console.error('Get trending error:', error);
+        //console.error('Get trending error:', error);
         return res.status(500).json({
             success: false,
             message: error.message || 'Failed to get trending topics'

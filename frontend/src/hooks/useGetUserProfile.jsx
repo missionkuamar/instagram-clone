@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setUserProfile } from "../features/auth/authSlice";
 import axiosInstance from "../services/axiosInstance";
+import { toast } from "sonner";
 
 const useGetUserProfile = (userId) => {
   const dispatch = useDispatch();
@@ -10,7 +11,7 @@ const useGetUserProfile = (userId) => {
     //console.log("Hook called with userId:", userId);
 
     if (!userId) {
-      console.error("userId is undefined");
+     // console.error("userId is undefined");
       return;
     }
 
@@ -31,10 +32,13 @@ const useGetUserProfile = (userId) => {
           dispatch(setUserProfile(response.data.user));
         }
       } catch (error) {
-        console.error(
-          "API Error:",
-          error.response?.data || error.message
-        );
+        // console.error(
+        //   "API Error:",
+        //   error.response?.data || error.message
+        // );
+         toast.error(
+    error.response?.data?.message || "Something went wrong"
+  );
       }
     };
 

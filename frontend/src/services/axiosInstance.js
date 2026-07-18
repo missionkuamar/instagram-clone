@@ -19,6 +19,7 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
+   // console.log(import.meta.env.VITE_API_URL_API);
     // console.group("🚀 AXIOS REQUEST");
 
     // console.log("Method:", config.method?.toUpperCase());
@@ -36,14 +37,14 @@ axiosInstance.interceptors.request.use(
       //console.log("Body:", config.data);
     }
 
-    console.groupEnd();
+    //console.groupEnd();
 
     return config;
   },
   (error) => {
-    console.group("❌ REQUEST ERROR");
-     console.error(error);
-     console.groupEnd();
+    // console.group("❌ REQUEST ERROR");
+    //  console.error(error);
+    //  console.groupEnd();
     return Promise.reject(error);
   }
 );
@@ -61,13 +62,13 @@ axiosInstance.interceptors.response.use(
     // console.log("URL:", response.config.url);
     // console.log("Data:", response.data);
 
-     console.groupEnd();
+    // console.groupEnd();
 
     return response;
   },
 
   (error) => {
-    console.group("❌ AXIOS ERROR");
+   // console.group("❌ AXIOS ERROR");
 
     // console.log("Message:", error.message);
     // console.log("Code:", error.code);
@@ -103,13 +104,13 @@ axiosInstance.interceptors.response.use(
 
     else {
       // console.log("========== AXIOS CONFIG ERROR ==========");
-      console.error(error);
+    //  console.error(error);
 
       toast.error(error.message);
     }
 
-    console.groupEnd();
-
+//console.groupEnd();
+//
     return Promise.reject(error);
   }
 );

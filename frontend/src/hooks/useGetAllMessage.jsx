@@ -21,7 +21,7 @@ const useGetAllMessage = () => {
 ));
                 }
             } catch (error) {
-                console.log(error);
+                //console.log(error);
             }
         }
         fetchAllMessage();

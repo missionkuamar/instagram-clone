@@ -22,7 +22,8 @@ export const useAuth = () => {
             await dispatch(logoutUser()).unwrap();
             navigate('/login');
         } catch (error) {
-            console.error('Logout failed:', error);
+           // console.error('Logout failed:', error);
+           
         }
     }, [dispatch, navigate]);
 

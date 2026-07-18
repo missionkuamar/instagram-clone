@@ -74,7 +74,10 @@ const CreatePost = ({ open, setOpen }) => {
             toast.error(res.data.message || "Failed to create post");
         }
     } catch (error) {
-        console.error("Create post error:", error);
+      //  console.error("Create post error:", error);
+       toast.error(
+    error.response?.data?.message || "Something went wrong"
+  );
         // Error is already handled by axios interceptor
         // No need to show toast again
     } finally {

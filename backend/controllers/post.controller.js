@@ -64,7 +64,7 @@ export const addNewPost = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Error in addNewPost:', error);
+       // console.error('Error in addNewPost:', error);
         return res.status(500).json({
             message: error.message || 'Internal server error',
             success: false,
@@ -91,7 +91,12 @@ export const getAllPost = async (req, res) => {
             success: true
         })
     } catch (error) {
-        console.log(error);
+        //console.log(error);
+         return res.status(500).json({
+            message: error.message || 'Internal server error',
+            success: false,
+            error: error.message
+        });
     }
 };
 
@@ -115,7 +120,12 @@ export const getUserPost = async (req, res) => {
             success: true
         })
     } catch (error) {
-        console.log(error);
+       // console.log(error);
+         return res.status(500).json({
+            message: error.message || 'Internal server error',
+            success: false,
+            error: error.message
+        });
     }
 }
 
@@ -157,7 +167,7 @@ export const likePost = async (req, res) => {
             likeCount: updatedPost.likes.length  // Send count
         });
     } catch (error) {
-        console.log(error);
+       // console.log(error);
         return res.status(500).json({
             message: 'Internal server error',
             success: false
@@ -202,7 +212,7 @@ export const dislikePost = async (req, res) => {
             likeCount: updatedPost.likes.length
         });
     } catch (error) {
-        console.log(error);
+      //  console.log(error);
         return res.status(500).json({
             message: 'Internal server error',
             success: false
@@ -241,7 +251,12 @@ export const addComment = async (req, res) => {
         })
 
     } catch (error) {
-        console.log(error);
+       // console.log(error);
+        return res.status(500).json({
+            message: error.message || 'Internal server error',
+            success: false,
+            error: error.message
+        });
     }
 };
 export const getCommentsOfPost = async (req, res) => {
@@ -255,7 +270,12 @@ export const getCommentsOfPost = async (req, res) => {
         return res.status(200).json({ success: true, comments });
 
     } catch (error) {
-        console.log(error);
+        //console.log(error);
+         return res.status(500).json({
+            message: error.message || 'Internal server error',
+            success: false,
+            error: error.message
+        });
     }
 }
 export const deletePost = async (req, res) => {
@@ -287,7 +307,12 @@ export const deletePost = async (req, res) => {
         })
 
     } catch (error) {
-        console.log(error);
+        //console.log(error);
+         return res.status(500).json({
+            message: error.message || 'Internal server error',
+            success: false,
+            error: error.message
+        });
     }
 }
 export const bookmarkPost = async (req, res) => {
@@ -313,7 +338,12 @@ export const bookmarkPost = async (req, res) => {
         }
 
     } catch (error) {
-        console.log(error);
+       // console.log(error);
+        return res.status(500).json({
+            message: error.message || 'Internal server error',
+            success: false,
+            error: error.message
+        });
     }
 }
 
@@ -352,7 +382,7 @@ export const deleteComment = async (req, res) => {
             message: 'Comment deleted successfully'
         });
     } catch (error) {
-        console.error('Delete comment error:', error);
+       // console.error('Delete comment error:', error);
         res.status(500).json({
             success: false,
             message: error.message || 'Failed to delete comment'

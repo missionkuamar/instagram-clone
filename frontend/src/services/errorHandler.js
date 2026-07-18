@@ -1,17 +1,17 @@
 import { toast } from 'sonner';
 
 export const handleApiError = (error, customMessage = null) => {
-    console.error('🔴 API Error Details:', {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status,
-        config: {
-            url: error.config?.url,
-            method: error.config?.method,
-            data: error.config?.data
-        },
-        timestamp: new Date().toISOString()
-    });
+    // console.error('🔴 API Error Details:', {
+    //     message: error.message,
+    //     response: error.response?.data,
+    //     status: error.response?.status,
+    //     config: {
+    //         url: error.config?.url,
+    //         method: error.config?.method,
+    //         data: error.config?.data
+    //     },
+    //     timestamp: new Date().toISOString()
+    // });
 
     if (customMessage) {
         toast.error(customMessage);

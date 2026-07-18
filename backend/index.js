@@ -117,7 +117,7 @@ app.use("/api/v1/message", messageRoute);
 
 app.use((err, req, res, next) => {
   //  console.log("🔥 GLOBAL ERROR");
-    console.error(err);
+   // console.error(err);
 
     res.status(500).json({
         success: false,
@@ -136,10 +136,12 @@ app.use((req, res, next) => {
 // START SERVER
 // =====================
 
+const frontendUrl = process.env.URL
 server.listen(PORT, async () => {
     await connectDB();
 
-    //console.log("================================");
-  //  console.log(`✅ Server Running : http://localhost:${PORT}`);
-  //  console.log("================================");
+    console.log("================================");
+    console.log(`✅ frontend URL ${frontendUrl}`);
+   console.log(`✅ Server Running : http://localhost:${PORT}`);
+   console.log("================================");
 });

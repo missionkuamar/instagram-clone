@@ -58,7 +58,7 @@ const PostDetail = () => {
                 setLiked(postData.likes?.includes(user?._id));
             }
         } catch (error) {
-            console.error('Error fetching post:', error);
+         //   console.error('Error fetching post:', error);
             setError(error.response?.data?.message || 'Failed to load post');
             toast.error('Failed to load post');
         } finally {
@@ -91,7 +91,7 @@ const PostDetail = () => {
                 toast.success(response.data.message);
             }
         } catch (error) {
-            console.error('Like error:', error);
+          //  console.error('Like error:', error);
             toast.error(error.response?.data?.message || 'Failed to update like');
         }
     };
@@ -130,7 +130,7 @@ const PostDetail = () => {
                 toast.success('Comment added successfully');
             }
         } catch (error) {
-            console.error('Comment error:', error);
+           // console.error('Comment error:', error);
             toast.error(error.response?.data?.message || 'Failed to add comment');
         } finally {
             setSubmitting(false);
@@ -149,7 +149,7 @@ const PostDetail = () => {
                 navigate(-1);
             }
         } catch (error) {
-            console.error('Delete post error:', error);
+           // console.error('Delete post error:', error);
             toast.error(error.response?.data?.message || 'Failed to delete post');
         } finally {
             setDeleteDialogOpen(false);
@@ -170,7 +170,7 @@ const PostDetail = () => {
                 toast.success('Comment deleted successfully');
             }
         } catch (error) {
-            console.error('Delete comment error:', error);
+            //console.error('Delete comment error:', error);
             toast.error(error.response?.data?.message || 'Failed to delete comment');
         } finally {
             setDeleteCommentDialogOpen(false);

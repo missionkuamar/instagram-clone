@@ -86,7 +86,10 @@ const Post = ({ post }) => {
                 toast.success(res.data.message);
             }
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+             toast.error(
+    error.response?.data?.message || "Something went wrong"
+  );
         } finally {
             setText('');
         }
@@ -117,7 +120,7 @@ const Post = ({ post }) => {
                 toast.success(response.data.message);
             }
         } catch (error) {
-            console.log(error);
+           // console.log(error);
             toast.error("Failed to update like");
         }
     }
@@ -134,7 +137,7 @@ const Post = ({ post }) => {
                 dispatch(deletePost(post?._id));
             }
         } catch (error) {
-            console.log(error);
+           // console.log(error);
             toast.error("Failed to delete post");
         }
     }
@@ -183,7 +186,7 @@ const Post = ({ post }) => {
                 toast.error(response.data.message || "Failed to update follow status");
             }
         } catch (error) {
-            console.log("Follow/Unfollow error:", error);
+          //  console.log("Follow/Unfollow error:", error);
             toast.error(error.response?.data?.message || error.message || 'Failed to update follow status');
         } finally {
             setIsLoadingFollow(false);
@@ -257,7 +260,7 @@ const Post = ({ post }) => {
                 }
             }
         } catch (error) {
-            console.log("Bookmark error:", error);
+           // console.log("Bookmark error:", error);
             toast.error(error.response?.data?.message || "Failed to update bookmark");
         }
     };

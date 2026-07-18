@@ -77,7 +77,7 @@ const ChatPage = () => {
         setTextMessage("");
       }
     } catch (error) {
-      console.error('Send message error:', error);
+     // console.error('Send message error:', error);
       toast.error('Failed to send message');
     } finally {
       setIsSending(false);

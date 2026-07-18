@@ -20,7 +20,12 @@ const isAuthenticated = async (req,res,next)=>{
        // console.log("request Id", req.id);
         next();
     } catch (error) {
-        console.log(error);
+       // console.log(error);
+        return res.status(500).json({
+            message: error.message || 'Internal server error',
+            success: false,
+            error: error.message
+        });
     }
 }
 export default isAuthenticated;

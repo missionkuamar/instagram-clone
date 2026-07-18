@@ -21,7 +21,7 @@ export const registerUser = createAsyncThunk(
            // console.log('✅ [SLICE] Registration successful, returning data:', result.data);
             return result.data;
         } catch (error) {
-            console.error('🔴 [SLICE] Unexpected error in registerUser:', error);
+           // console.error('🔴 [SLICE] Unexpected error in registerUser:', error);
             return rejectWithValue(error.message || 'Registration failed');
         }
     }
@@ -45,7 +45,7 @@ export const loginUser = createAsyncThunk(
           //  console.log('✅ [SLICE] Login successful, returning data:', result.data);
             return result.data;
         } catch (error) {
-            console.error('🔴 [SLICE] Unexpected error in loginUser:', error);
+          //  console.error('🔴 [SLICE] Unexpected error in loginUser:', error);
             return rejectWithValue(error.message || 'Login failed');
         }
     }
@@ -69,7 +69,7 @@ export const logoutUser = createAsyncThunk(
             
             return result.data;
         } catch (error) {
-            console.error('🔴 [SLICE] Unexpected error in logoutUser:', error);
+          //  console.error('🔴 [SLICE] Unexpected error in logoutUser:', error);
             return rejectWithValue(error.message || 'Logout failed');
         }
     }

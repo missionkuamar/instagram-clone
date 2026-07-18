@@ -17,7 +17,7 @@ const useGetAllPost = () => {
                     dispatch(setPosts(response.data.posts));
                 }
             } catch (error) {
-                console.log(error);
+               // console.log(error);
             }
         }
         fetchAllPost();

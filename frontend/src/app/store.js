@@ -19,6 +19,7 @@ const persistConfig = {
     key: 'root',
     version: 1,
     storage,
+     blacklist: ["socketio"],
 }
 
 const rootReducer = combineReducers({
@@ -46,6 +47,7 @@ export const store = configureStore({
         REGISTER,
       ],
       ignoredPaths: ["socketio.socket"],
+      ignoredActionPaths: ["payload"],
     },
   }),
 });

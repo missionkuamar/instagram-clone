@@ -1,12 +1,12 @@
 // Explore.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-    Compass, 
-    TrendingUp, 
-    Clock, 
-    Flame, 
-    Grid, 
+import {
+    Compass,
+    TrendingUp,
+    Clock,
+    Flame,
+    Grid,
     List,
     Heart,
     MessageCircle,
@@ -20,6 +20,7 @@ import {
     Shirt
 } from 'lucide-react';
 import { useSelector } from 'react-redux';
+import { toast } from 'sonner';
 
 const Explore = () => {
     const [activeTab, setActiveTab] = useState('for-you'); // for-you, trending, recent
@@ -27,7 +28,7 @@ const Explore = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [viewMode, setViewMode] = useState('grid');
     const [selectedCategory, setSelectedCategory] = useState('all');
-    
+
     const navigate = useNavigate();
     const { user } = useSelector(store => store.auth);
 
@@ -57,25 +58,25 @@ const Explore = () => {
             // Simulate API call - Replace with actual API
             // const response = await exploreAPI(activeTab, selectedCategory);
             // setPosts(response.data);
-            
+
             setTimeout(() => {
                 const mockPosts = [
-                    { 
-                        id: 1, 
+                    {
+                        id: 1,
                         image: 'https://picsum.photos/400/400?random=1',
-                        user: 'user1', 
+                        user: 'user1',
                         username: 'traveler_01',
-                        likes: 1245, 
+                        likes: 1245,
                         comments: 89,
                         category: 'travel',
                         createdAt: new Date().toISOString()
                     },
-                    { 
-                        id: 2, 
+                    {
+                        id: 2,
                         image: 'https://picsum.photos/400/400?random=2',
-                        user: 'user2', 
+                        user: 'user2',
                         username: 'art_lover',
-                        likes: 834, 
+                        likes: 834,
                         comments: 56,
                         category: 'art',
                         createdAt: new Date().toISOString()
@@ -86,7 +87,10 @@ const Explore = () => {
                 setIsLoading(false);
             }, 800);
         } catch (error) {
-            console.error('Error fetching posts:', error);
+            //console.error('Error fetching posts:', error);
+            toast.error(
+                error.response?.data?.message || "Something went wrong"
+            );
             setIsLoading(false);
         }
     };
@@ -108,7 +112,7 @@ const Explore = () => {
                         Discover amazing content from the community
                     </p>
                 </div>
-                
+
                 <div className="flex items-center gap-2">
                     <button
                         onClick={fetchPosts}
@@ -119,17 +123,15 @@ const Explore = () => {
                     <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
                         <button
                             onClick={() => setViewMode('grid')}
-                            className={`p-1.5 rounded transition ${
-                                viewMode === 'grid' ? 'bg-white dark:bg-gray-700 shadow' : ''
-                            }`}
+                            className={`p-1.5 rounded transition ${viewMode === 'grid' ? 'bg-white dark:bg-gray-700 shadow' : ''
+                                }`}
                         >
                             <Grid size={16} className="text-gray-600 dark:text-gray-300" />
                         </button>
                         <button
                             onClick={() => setViewMode('list')}
-                            className={`p-1.5 rounded transition ${
-                                viewMode === 'list' ? 'bg-white dark:bg-gray-700 shadow' : ''
-                            }`}
+                            className={`p-1.5 rounded transition ${viewMode === 'list' ? 'bg-white dark:bg-gray-700 shadow' : ''
+                                }`}
                         >
                             <List size={16} className="text-gray-600 dark:text-gray-300" />
                         </button>
@@ -143,28 +145,26 @@ const Explore = () => {
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
-                            activeTab === tab.id
+                        className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all ${activeTab === tab.id
                                 ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/25'
                                 : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-                        }`}
+                            }`}
                     >
                         {tab.icon}
                         {tab.label}
                     </button>
                 ))}
-                
+
                 {/* Categories */}
                 <div className="flex flex-wrap gap-1 ml-2">
                     {categories.map((category) => (
                         <button
                             key={category.id}
                             onClick={() => setSelectedCategory(category.id)}
-                            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                                selectedCategory === category.id
+                            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedCategory === category.id
                                     ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400'
                                     : 'bg-gray-50 dark:bg-gray-800/50 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
-                            }`}
+                                }`}
                         >
                             {category.label}
                         </button>
@@ -180,7 +180,7 @@ const Explore = () => {
                     ))}
                 </div>
             ) : posts.length > 0 ? (
-                <div className={viewMode === 'grid' 
+                <div className={viewMode === 'grid'
                     ? 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4'
                     : 'space-y-4'
                 }>

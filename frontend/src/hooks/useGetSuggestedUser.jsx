@@ -20,7 +20,7 @@ const useGetSuggestedUser = () => {
             }
 
         } catch(error){
-                console.error("Error fetching suggested users:", error);
+              //  console.error("Error fetching suggested users:", error);
         }
     }
  fetchSuggestedUsers();

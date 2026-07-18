@@ -100,7 +100,7 @@ const CommentDilog = ({ open, setOpen }) => {
                 toast.error(res.data.message || "Failed to add comment");
             }
         } catch (error) {
-            console.log("Comment Error:", error);
+          //  console.log("Comment Error:", error);
             toast.error(error.response?.data?.message || "Failed to add comment");
         } finally {
             setIsLoading(false);

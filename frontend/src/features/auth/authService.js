@@ -3,7 +3,7 @@ import { handleApiError, showSuccess } from '../../services/errorHandler';
 
 export const authService = {
     register: async (userData) => {
-        console.log('🔵 [SERVICE] Register function called with data:', userData);
+        //console.log('🔵 [SERVICE] Register function called with data:', userData);
         
         try {
             // console.log('📝 [SERVICE] Register attempt:', { 
@@ -26,12 +26,12 @@ export const authService = {
                 message: response.data.message 
             };
         } catch (error) {
-            console.error('❌ [SERVICE] Registration failed:', error);
-            console.error('Error details:', {
-                message: error.message,
-                response: error.response?.data,
-                status: error.response?.status
-            });
+           // console.error('❌ [SERVICE] Registration failed:', error);
+            // console.error('Error details:', {
+            //     message: error.message,
+            //     response: error.response?.data,
+            //     status: error.response?.status
+            // });
             
             const errorMessage = handleApiError(error);
             return { 
@@ -67,12 +67,12 @@ export const authService = {
                 message: response.data.message 
             };
         } catch (error) {
-            console.error('❌ [SERVICE] Login failed:', error);
-            console.error('Error details:', {
-                message: error.message,
-                response: error.response?.data,
-                status: error.response?.status
-            });
+            // console.error('❌ [SERVICE] Login failed:', error);
+            // console.error('Error details:', {
+            //     message: error.message,
+            //     response: error.response?.data,
+            //     status: error.response?.status
+            // });
             
             const errorMessage = handleApiError(error);
             return { 
@@ -104,11 +104,11 @@ export const authService = {
             message: response.data.message 
         };
     } catch (error) {
-        console.error('❌ [SERVICE] Logout failed - FULL ERROR:', error);
-        console.error('Error response:', error.response);
-        console.error('Error status:', error.response?.status);
-        console.error('Error data:', error.response?.data);
-        console.error('Error message:', error.message);
+        // console.error('❌ [SERVICE] Logout failed - FULL ERROR:', error);
+        // console.error('Error response:', error.response);
+        // console.error('Error status:', error.response?.status);
+        // console.error('Error data:', error.response?.data);
+        // console.error('Error message:', error.message);
         
         // Don't use handleApiError yet, log the actual error first
         const errorMessage = error.response?.data?.message || error.message || 'Logout failed';

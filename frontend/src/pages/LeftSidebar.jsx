@@ -11,6 +11,7 @@ import { resetPostsState } from '@/features/post/postSlice';
 import { resetChatState } from '@/features/chat/chatSlice';
 import { resetSocketState } from '@/features/socket/SocketSlice';
 import { resetRealTimeNotificationState } from '@/features/rtnslice/notification';
+import { toast } from 'sonner';
 
 const LeftSidebar = () => {
     const navigate = useNavigate();
@@ -59,7 +60,10 @@ const LeftSidebar = () => {
 
             navigate("/login");
         } catch (error) {
-            console.error("Logout failed:", error);
+           // console.error("Logout failed:", error);
+             toast.error(
+    error.response?.data?.message || "Something went wrong"
+  );
         }
     } else if (textType === "Create") {
         setOpenCreatePost(true);

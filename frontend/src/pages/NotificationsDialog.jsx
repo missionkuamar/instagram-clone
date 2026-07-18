@@ -16,7 +16,7 @@ import { formatDistanceToNow } from 'date-fns';
 
 const NotificationsDialog = ({ open, setOpen }) => {
     const { likeNotification } = useSelector((store) => store.realTimeNotification);
-    console.log(likeNotification);
+  //  console.log(likeNotification);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     
