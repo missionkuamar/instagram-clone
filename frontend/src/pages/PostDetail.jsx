@@ -49,7 +49,7 @@ const PostDetail = () => {
             const response = await axiosInstance.get(`/search/posts/${id}`, {
                 withCredentials: true
             });
-            console.log("response:", response);
+            //console.log("response:", response);
             if (response.data.success) {
                 const postData = response.data.post;
                 setPost(postData);
@@ -164,7 +164,7 @@ const PostDetail = () => {
             const response = await axiosInstance.delete(`/comment/${selectedCommentId}`, {
                 withCredentials: true
             });
-console.log("delete comment  response:", response)
+//console.log("delete comment  response:", response)
             if (response.data.success) {
                 setComments(comments.filter(c => c._id !== selectedCommentId));
                 toast.success('Comment deleted successfully');
@@ -177,7 +177,7 @@ console.log("delete comment  response:", response)
             setSelectedCommentId(null);
         }
     };
-console.log("comments : ", setComments)
+//console.log("comments : ", setComments)
     // Format date
     const formatDate = (date) => {
         if (!date) return '';

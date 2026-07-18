@@ -70,9 +70,12 @@ const App = () => {
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
+ const SOCKET_API_URL =
+    import.meta.env.VITE_SOCKET_URL || "http://localhost:8000";
+ 
  useEffect(() => {
     if (user) {
-      const socketio = io('http://localhost:8000', {
+      const socketio = io(SOCKET_API_URL, {
         query: {
           userId: user?._id
         },

@@ -41,14 +41,14 @@ const Login = () => {
     }
 
     useEffect(() => {
-        console.log('🔄 Login component mounted');
+      //  console.log('🔄 Login component mounted');
         if (isAuthenticated) {
-            console.log('👤 User already logged in, redirecting to home');
+          //  console.log('👤 User already logged in, redirecting to home');
             navigate("/");
         }
         
         return () => {
-            console.log('🔚 Login component unmounted');
+           // console.log('🔚 Login component unmounted');
         };
     }, [isAuthenticated, navigate]);
 

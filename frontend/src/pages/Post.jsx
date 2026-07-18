@@ -74,7 +74,7 @@ const Post = ({ post }) => {
                 },
                 withCredentials: true
             });
-            console.log("Comment Response:", res.data);
+           // console.log("Comment Response:", res.data);
             if (res.data.success) {
                 const updatedCommentData = [...comment, res.data.comment];
                 setComment(updatedCommentData);
@@ -99,7 +99,7 @@ const Post = ({ post }) => {
                 withCredentials: true
             });
 
-            console.log("Response Data:", response.data);
+          //  console.log("Response Data:", response.data);
 
             if (response.data.success) {
                 const updatedLikes = liked ? postLike - 1 : postLike + 1;
@@ -124,11 +124,11 @@ const Post = ({ post }) => {
 
     const deletePostHandler = async (post) => {
         try {
-            console.log(post)
+          //  console.log(post)
             const response = await axiosInstance.delete(`/post/delete/${post?._id}`, {
                 withCredentials: true
             });
-            console.log("delete response", response)
+          //  console.log("delete response", response)
             if (response.data.success) {
                 toast.success(response.data.message);
                 dispatch(deletePost(post?._id));
@@ -152,13 +152,13 @@ const Post = ({ post }) => {
 
         setIsLoadingFollow(true);
         try {
-            console.log("Follow/Unfollow user ID:", authorId);
+         //   console.log("Follow/Unfollow user ID:", authorId);
             
             const response = await axiosInstance.post(`/user/followorunfollow/${authorId}`, {}, {
                 withCredentials: true,
             });
             
-            console.log("Follow/Unfollow response:", response);
+          //  console.log("Follow/Unfollow response:", response);
             
             if (response.data.success) {
                 const newFollowingState = !isFollowing;
@@ -193,13 +193,13 @@ const Post = ({ post }) => {
     // ✅ FIXED: Bookmark Handler with proper Redux sync
     const bookMarkHandler = async (post) => {
         try {
-            console.log("Bookmark post ID:", post._id);
+           // console.log("Bookmark post ID:", post._id);
             
             const response = await axiosInstance.get(`/post/${post._id}/bookmark`, {
                 withCredentials: true,
             });
             
-            console.log("Bookmark response:", response);
+          //  console.log("Bookmark response:", response);
             
             if (response.data.success) {
                 // Check if bookmarked from response
@@ -207,7 +207,7 @@ const Post = ({ post }) => {
                                    response.data.isBookmarked || 
                                    response.data.bookmarked;
                 
-                console.log('isBookmarked:', isBookmarked);
+                //console.log('isBookmarked:', isBookmarked);
                 
                 // ✅ Update local state
                 setSaved(isBookmarked);

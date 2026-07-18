@@ -13,7 +13,7 @@ const chatSlice = createSlice({
             state.onlineUsers = action.payload;
         },
         setMessages:(state, action) => {
-            console.log(action.payload);
+           // console.log(action.payload);
             state.messages = action.payload;
         }
     }

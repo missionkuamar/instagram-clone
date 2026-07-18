@@ -33,16 +33,16 @@ export const handleApiError = (error, customMessage = null) => {
 };
 
 export const showSuccess = (message) => {
-    console.log('✅ Success:', message);
+   // console.log('✅ Success:', message);
     toast.success(message);
 };
 
 export const showInfo = (message) => {
-    console.log('ℹ️ Info:', message);
+  //  console.log('ℹ️ Info:', message);
     toast.info(message);
 };
 
 export const showWarning = (message) => {
-    console.log('⚠️ Warning:', message);
+    //console.log('⚠️ Warning:', message);
     toast.warning(message);
 };

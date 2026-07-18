@@ -11,7 +11,7 @@ export const addNewPost = async (req, res) => {
         const image = req.file;
         const authorId = req.id; // This comes from the auth middleware
 
-        console.log('Author ID:', authorId); // Debug log
+       // console.log('Author ID:', authorId); // Debug log
 
         if (!image) {
             return res.status(400).json({ 
@@ -263,7 +263,7 @@ export const deletePost = async (req, res) => {
         const postId = req.params.id;
         const authorId = req.id;
         
-        console.log('delete post response', postId, authorId)
+       // console.log('delete post response', postId, authorId)
         const post = await Post.findById(postId);
         if (!post) return res.status(404).json({ message: 'Post not found', success: false });
 
@@ -294,7 +294,7 @@ export const bookmarkPost = async (req, res) => {
     try {
         const postId = req.params.id;
         const authorId = req.id;
-        console.log("bookmart ho raha hai");
+       // console.log("bookmart ho raha hai");
         const post = await Post.findById(postId);
         if (!post) return res.status(404).json({ message: 'Post not found', success: false });
 

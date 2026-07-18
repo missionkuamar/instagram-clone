@@ -168,7 +168,7 @@ const searchSlice = createSlice({
             state.postsAdvancedFilters = initialState.postsAdvancedFilters;
         },
         clearPosts: (state) => {
-            console.log('call clear Posts')
+           // console.log('call clear Posts')
             state.posts = [];
             state.postsQuery = '';
             state.postsPagination = initialState.postsPagination;
@@ -185,7 +185,7 @@ const searchSlice = createSlice({
             state.usersFilters = { ...state.usersFilters, ...action.payload };
         },
         clearUsers: (state) => {
-            console.log("clearUser call ")
+           // console.log("clearUser call ")
             state.users = [];
             state.usersQuery = '';
             state.usersPagination = initialState.usersPagination;
@@ -214,7 +214,7 @@ const searchSlice = createSlice({
                 state.postsError = null;
             })
             .addCase(searchPosts.fulfilled, (state, action) => {
-                 console.log("Searc Posts : ", action.payload);
+               //  console.log("Searc Posts : ", action.payload);
                 state.postsLoading = false;
                 state.posts = action.payload?.posts || [];
                 state.postsPagination = {

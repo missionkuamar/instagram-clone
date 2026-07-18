@@ -9,7 +9,7 @@ const ProtectedRoutes = ({ children }) => {
     useEffect(() => {
         // Don't redirect while still loading auth state
         if (!isLoading && !user) {
-            console.log('🔒 No user found, redirecting to login');
+          //  console.log('🔒 No user found, redirecting to login');
             navigate("/login");
         }
     }, [user, isLoading, navigate]);

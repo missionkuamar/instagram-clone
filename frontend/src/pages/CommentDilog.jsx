@@ -57,7 +57,7 @@ const CommentDilog = ({ open, setOpen }) => {
                 }
             );
             
-            console.log("Comment Response:", res.data);
+            //console.log("Comment Response:", res.data);
             
             if (res.data.success) {
                 // ✅ Create new comment object

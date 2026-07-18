@@ -34,13 +34,13 @@ const EditProfile = () => {
  // console.log(user);
  const editProfileHandler = async () => {
   // 🔍 STEP 1: Initial input data check
-  console.log('🔍 STEP 1 - Initial Input State:', {
-    bio: input.bio,
-    gender: input.gender,
-    profilePhoto: input.profilePhoto,
-    profilePhotoType: typeof input.profilePhoto,
-    isFile: input.profilePhoto instanceof File
-  });
+  // console.log('🔍 STEP 1 - Initial Input State:', {
+  //   bio: input.bio,
+  //   gender: input.gender,
+  //   profilePhoto: input.profilePhoto,
+  //   profilePhotoType: typeof input.profilePhoto,
+  //   isFile: input.profilePhoto instanceof File
+  // });
 
   const formData = new FormData();
   formData.append('bio', input.bio);
@@ -49,20 +49,20 @@ const EditProfile = () => {
   // 🔍 STEP 2: Check if file is being added
   if (input.profilePhoto && typeof input.profilePhoto !== 'string') {
     formData.append("profilePhoto", input.profilePhoto);
-    console.log('🔍 STEP 2 - File added to FormData:', {
-      fileName: input.profilePhoto.name,
-      fileSize: input.profilePhoto.size,
-      fileType: input.profilePhoto.type
-    });
+    // console.log('🔍 STEP 2 - File added to FormData:', {
+    //   fileName: input.profilePhoto.name,
+    //   fileSize: input.profilePhoto.size,
+    //   fileType: input.profilePhoto.type
+    // });
   } else {
     console.log('🔍 STEP 2 - No new file selected, keeping existing photo');
   }
 
   // 🔍 STEP 3: Check FormData contents (iterate through all entries)
-  console.log('🔍 STEP 3 - FormData entries:');
+  //console.log('🔍 STEP 3 - FormData entries:');
   for (let pair of formData.entries()) {
     if (pair[0] === 'profilePhoto' && pair[1] instanceof File) {
-      console.log(`   ${pair[0]}: [File] ${pair[1].name} (${pair[1].size} bytes)`);
+      //console.log(`   ${pair[0]}: [File] ${pair[1].name} (${pair[1].size} bytes)`);
     } else {
       console.log(`   ${pair[0]}: ${pair[1]}`);
     }
@@ -70,7 +70,7 @@ const EditProfile = () => {
 
   try {
     setLoading(true);
-    console.log('🔍 STEP 4 - Sending request to backend...');
+  //  console.log('🔍 STEP 4 - Sending request to backend...');
     
     const res = await axiosInstance.post(`/user/profile/edit`, formData, {
       headers: {
@@ -80,22 +80,22 @@ const EditProfile = () => {
     });
     
     // 🔍 STEP 5: Response received successfully
-    console.log('🔍 STEP 5 - Response received:', {
-      status: res.status,
-      statusText: res.statusText,
-      data: res.data,
-      fullResponse: res
-    });
+    // console.log('🔍 STEP 5 - Response received:', {
+    //   status: res.status,
+    //   statusText: res.statusText,
+    //   data: res.data,
+    //   fullResponse: res
+    // });
     
     if (res.data.success) {
-      console.log('🔍 STEP 6 - Update successful!', {
-        oldUserData: user,
-        newUserData: {
-          bio: res.data.user?.bio,
-          profilePhoto: res.data.user?.profilePhoto,
-          gender: res.data.user?.gender
-        }
-      });
+      // console.log('🔍 STEP 6 - Update successful!', {
+      //   oldUserData: user,
+      //   newUserData: {
+      //     bio: res.data.user?.bio,
+      //     profilePhoto: res.data.user?.profilePhoto,
+      //     gender: res.data.user?.gender
+      //   }
+      // });
       
       const updatedUserData = {
         ...user,
@@ -105,7 +105,7 @@ const EditProfile = () => {
       };
       
       dispatch(setAuthUser(updatedUserData));
-      console.log('🔍 STEP 7 - Dispatch completed, navigating to:', `/profile/${user?._id}`);
+      //console.log('🔍 STEP 7 - Dispatch completed, navigating to:', `/profile/${user?._id}`);
       
       navigate(`/profile/${user?._id}`);
       toast.success(res.data.message);
@@ -133,7 +133,7 @@ const EditProfile = () => {
     }
   } finally {
     setLoading(false);
-    console.log('🔍 STEP 8 - Loading state set to false');
+    //console.log('🔍 STEP 8 - Loading state set to false');
   }
 };
 

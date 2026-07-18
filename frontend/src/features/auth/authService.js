@@ -6,18 +6,18 @@ export const authService = {
         console.log('🔵 [SERVICE] Register function called with data:', userData);
         
         try {
-            console.log('📝 [SERVICE] Register attempt:', { 
-                ...userData, 
-                password: '***' 
-            });
+            // console.log('📝 [SERVICE] Register attempt:', { 
+            //     ...userData, 
+            //     password: '***' 
+            // });
             
             const response = await axiosInstance.post('/user/register', userData);
             
-            console.log('✅ [SERVICE] Registration successful:', {
-                status: response.status,
-                message: response.data.message,
-                fullResponse: response.data
-            });
+            // console.log('✅ [SERVICE] Registration successful:', {
+            //     status: response.status,
+            //     message: response.data.message,
+            //     fullResponse: response.data
+            // });
             
             showSuccess(response.data.message);
             return { 
@@ -43,21 +43,21 @@ export const authService = {
     },
 
     login: async (credentials) => {
-        console.log('🔵 [SERVICE] Login function called with:', credentials.email);
+      //  console.log('🔵 [SERVICE] Login function called with:', credentials.email);
         
         try {
-            console.log('🔐 [SERVICE] Login attempt:', { 
-                email: credentials.email,
-                timestamp: new Date().toISOString()
-            });
+            // console.log('🔐 [SERVICE] Login attempt:', { 
+            //     email: credentials.email,
+            //     timestamp: new Date().toISOString()
+            // });
             
             const response = await axiosInstance.post('/user/login', credentials);
             
-            console.log('✅ [SERVICE] Login successful:', {
-                status: response.status,
-                user: response.data.user,
-                message: response.data.message
-            });
+            // console.log('✅ [SERVICE] Login successful:', {
+            //     status: response.status,
+            //     user: response.data.user,
+            //     message: response.data.message
+            // });
             
             showSuccess(response.data.message);
             return { 
@@ -84,18 +84,18 @@ export const authService = {
     },
 
     logout: async () => {
-    console.log('🔵 [SERVICE] Logout function called');
+  //  console.log('🔵 [SERVICE] Logout function called');
     
     try {
-        console.log('🚪 [SERVICE] Logout attempt');
+      //  console.log('🚪 [SERVICE] Logout attempt');
         
         const response = await axiosInstance.post('/user/logout');
         
-        console.log('✅ [SERVICE] Logout successful:', {
-            status: response.status,
-            message: response.data.message,
-            fullResponse: response.data
-        });
+        // console.log('✅ [SERVICE] Logout successful:', {
+        //     status: response.status,
+        //     message: response.data.message,
+        //     fullResponse: response.data
+        // });
         
         showSuccess(response.data.message);
         return { 

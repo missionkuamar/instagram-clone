@@ -39,7 +39,7 @@ export const searchPosts = async (req, res) => {
 
         const total = await Post.countDocuments(query);
 
-        console.log('Posts found:', posts.length);
+       // console.log('Posts found:', posts.length);
 
         res.status(200).json({
             success: true,
@@ -82,7 +82,7 @@ export const getPostById = async (req, res) => {
             });
         }
 
-        console.log('Post found:', post._id);
+       // console.log('Post found:', post._id);
         res.status(200).json({
             success: true,
             post: post // ✅ Send as 'post'
@@ -124,7 +124,7 @@ export const searchUsers = async (req, res) => {
 
         const total = await User.countDocuments(query);
 
-        console.log('Users found:', users.length);
+       // console.log('Users found:', users.length);
 
         res.status(200).json({
             success: true,
@@ -158,7 +158,7 @@ export const getUserById = async (req, res) => {
             });
         }
 
-        console.log('User found:', user._id);
+       // console.log('User found:', user._id);
         res.status(200).json({
             success: true,
             user: user, // ✅ Send as 'user'
@@ -197,7 +197,7 @@ export const searchHashtags = async (req, res) => {
             tag: { $regex: q, $options: 'i' }
         });
 
-        console.log('Hashtags found:', hashtags.length);
+       // console.log('Hashtags found:', hashtags.length);
 
         return res.status(200).json({
             success: true,

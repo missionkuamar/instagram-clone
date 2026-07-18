@@ -29,27 +29,27 @@ const Signup = () => {
     const signupHandler = async (e) => {
         e.preventDefault();
         
-        console.log('🚀 Signup form submitted');
-        console.log('📊 Form data:', input);
+       // console.log('🚀 Signup form submitted');
+       // console.log('📊 Form data:', input);
         
         // Validation
         if (!input.username || !input.email || !input.password) {
-            console.log('❌ Validation failed: Missing fields');
+         //   console.log('❌ Validation failed: Missing fields');
             toast.error('Please fill in all fields');
             return;
         }
         
         if (input.password.length < 6) {
-            console.log('❌ Validation failed: Password too short');
+          //  console.log('❌ Validation failed: Password too short');
             toast.error('Password must be at least 6 characters');
             return;
         }
         
-        console.log('✅ Validation passed, dispatching registerUser...');
+        //console.log('✅ Validation passed, dispatching registerUser...');
         
         try {
             const result = await dispatch(registerUser(input)).unwrap();
-            console.log('🎉 Registration successful! Result:', result);
+           // console.log('🎉 Registration successful! Result:', result);
             
             toast.success('Account created successfully! Please login.');
             navigate("/login");
@@ -61,14 +61,14 @@ const Signup = () => {
     }
 
     useEffect(() => {
-        console.log('📝 Signup component mounted');
+      //  console.log('📝 Signup component mounted');
         if (isAuthenticated) {
-            console.log('👤 User already logged in, redirecting to home');
+          ///  console.log('👤 User already logged in, redirecting to home');
             navigate("/");
         }
         
         return () => {
-            console.log('🔚 Signup component unmounted');
+          //  console.log('🔚 Signup component unmounted');
         };
     }, [isAuthenticated, navigate]);
 

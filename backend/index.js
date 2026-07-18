@@ -15,12 +15,12 @@ dotenv.config();
 const PORT = process.env.PORT || 8000;
 const __dirname = path.resolve();
 
-console.log("===================================");
-console.log("🚀 SERVER STARTING...");
-console.log("PORT :", PORT);
-console.log("URL  :", process.env.URL);
-console.log("NODE :", process.version);
-console.log("===================================");
+// console.log("===================================");
+// console.log("🚀 SERVER STARTING...");
+// console.log("PORT :", PORT);
+// console.log("URL  :", process.env.URL);
+// console.log("NODE :", process.version);
+// console.log("===================================");
 
 // =====================
 // REQUEST LOGGER
@@ -37,8 +37,8 @@ app.use((req, res, next) => {
     // console.log("==============================");
 
     res.on("finish", () => {
-        console.log("📤 RESPONSE :", res.statusCode);
-        console.log("==============================\n");
+        // console.log("📤 RESPONSE :", res.statusCode);
+        // console.log("==============================\n");
     });
 
     next();

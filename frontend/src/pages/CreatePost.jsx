@@ -34,8 +34,8 @@ const CreatePost = ({ open, setOpen }) => {
   }
 
   const createPostHandler = async () => {
-    console.log("Caption:", caption);
-    console.log("File:", file);
+    // console.log("Caption:", caption);
+    // console.log("File:", file);
     
     if (!caption.trim() && !file) {
         toast.error("Please add caption or image");
@@ -56,7 +56,7 @@ const CreatePost = ({ open, setOpen }) => {
             }
         });
         
-        console.log("Response:", res);
+        //console.log("Response:", res);
         
         if (res.data.success) {
             toast.success(res.data.message || "Post created successfully");

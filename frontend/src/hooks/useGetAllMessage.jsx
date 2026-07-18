@@ -15,7 +15,7 @@ const useGetAllMessage = () => {
                 const response = await axiosInstance.get(`/message/all/${selectedUser?._id}`, {
                     withCredentials: true
                 });
-                console.log("All Message Response : ", response);
+               // console.log("All Message Response : ", response);
                 if (response.data.success) {
                     dispatch(setMessages(response.data.messages
 ));

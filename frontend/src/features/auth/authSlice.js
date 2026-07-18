@@ -7,18 +7,18 @@ import { useDispatch } from 'react-redux';
 export const registerUser = createAsyncThunk(
     'auth/register',
     async (userData, { rejectWithValue }) => {
-        console.log('🟢 [SLICE] registerUser thunk called with:', userData);
+      //  console.log('🟢 [SLICE] registerUser thunk called with:', userData);
         
         try {
             const result = await authService.register(userData);
-            console.log('🟢 [SLICE] registerUser result:', result);
+          //  console.log('🟢 [SLICE] registerUser result:', result);
             
             if (!result.success) {
-                console.log('🔴 [SLICE] Registration failed, rejecting with value:', result.error);
+               // console.log('🔴 [SLICE] Registration failed, rejecting with value:', result.error);
                 return rejectWithValue(result.error);
             }
             
-            console.log('✅ [SLICE] Registration successful, returning data:', result.data);
+           // console.log('✅ [SLICE] Registration successful, returning data:', result.data);
             return result.data;
         } catch (error) {
             console.error('🔴 [SLICE] Unexpected error in registerUser:', error);
@@ -31,18 +31,18 @@ export const registerUser = createAsyncThunk(
 export const loginUser = createAsyncThunk(
     'auth/login',
     async (credentials, { rejectWithValue }) => {
-        console.log('🟢 [SLICE] loginUser thunk called with:', credentials.email);
+      //  console.log('🟢 [SLICE] loginUser thunk called with:', credentials.email);
         
         try {
             const result = await authService.login(credentials);
-            console.log('🟢 [SLICE] loginUser result:', result);
+           // console.log('🟢 [SLICE] loginUser result:', result);
             
             if (!result.success) {
-                console.log('🔴 [SLICE] Login failed, rejecting with value:', result.error);
+              //  console.log('🔴 [SLICE] Login failed, rejecting with value:', result.error);
                 return rejectWithValue(result.error);
             }
             
-            console.log('✅ [SLICE] Login successful, returning data:', result.data);
+          //  console.log('✅ [SLICE] Login successful, returning data:', result.data);
             return result.data;
         } catch (error) {
             console.error('🔴 [SLICE] Unexpected error in loginUser:', error);
@@ -54,11 +54,11 @@ export const loginUser = createAsyncThunk(
 export const logoutUser = createAsyncThunk(
     'auth/logout',
     async (_, { rejectWithValue }) => {  // Remove 'dispatch' if not needed
-        console.log('🟢 [SLICE] logoutUser thunk called');
+       // console.log('🟢 [SLICE] logoutUser thunk called');
         
         try {
             const result = await authService.logout();
-            console.log("logout Response : ", result);
+           // console.log("logout Response : ", result);
             
             // Fix the condition - check result.success first
             if (!result.success) {
@@ -91,7 +91,7 @@ const authSlice = createSlice({
     reducers: {
         clearError: (state) => {
             state.error = null;
-            console.log('🧹 [SLICE] Error cleared');
+          //  console.log('🧹 [SLICE] Error cleared');
         },
         resetAuthState: () => initialState,
         setSuggestedUsers: (state, action) => {
@@ -115,59 +115,59 @@ const authSlice = createSlice({
             .addCase(registerUser.pending, (state) => {
                 state.isLoading = true;
                 state.error = null;
-                console.log('⏳ [SLICE] Register: PENDING');
+              //  console.log('⏳ [SLICE] Register: PENDING');
             })
             .addCase(registerUser.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.error = null;
-                console.log('✅ [SLICE] Register: FULFILLED', action.payload);
+                //console.log('✅ [SLICE] Register: FULFILLED', action.payload);
             })
             .addCase(registerUser.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.payload || 'Registration failed';
-                console.error('❌ [SLICE] Register: REJECTED', action.payload);
+               // console.error('❌ [SLICE] Register: REJECTED', action.payload);
             })
             
             // LOGIN CASES
             .addCase(loginUser.pending, (state) => {
                 state.isLoading = true;
                 state.error = null;
-                console.log('⏳ [SLICE] Login: PENDING');
+               // console.log('⏳ [SLICE] Login: PENDING');
             })
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isAuthenticated = true;
                 state.user = action.payload.user;
                 state.error = null;
-                console.log('✅ [SLICE] Login: FULFILLED', {
-                    user: action.payload.user,
-                    isAuthenticated: true
-                });
+                // console.log('✅ [SLICE] Login: FULFILLED', {
+                //     user: action.payload.user,
+                //     isAuthenticated: true
+                // });
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isAuthenticated = false;
                 state.user = null;
                 state.error = action.payload || 'Login failed';
-                console.error('❌ [SLICE] Login: REJECTED', action.payload);
+                //console.error('❌ [SLICE] Login: REJECTED', action.payload);
             })
             
             // LOGOUT CASES
             .addCase(logoutUser.pending, (state) => {
                 state.isLoading = true;
-                console.log('⏳ [SLICE] Logout: PENDING');
+                //console.log('⏳ [SLICE] Logout: PENDING');
             })
             .addCase(logoutUser.fulfilled, (state) => {
                 state.isLoading = false;
                 state.isAuthenticated = false;
                 state.user = null;
                 state.error = null;
-                console.log('✅ [SLICE] Logout: FULFILLED');
+                //console.log('✅ [SLICE] Logout: FULFILLED');
             })
             .addCase(logoutUser.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.payload || 'Logout failed';
-                console.error('❌ [SLICE] Logout: REJECTED', action.payload);
+               // console.error('❌ [SLICE] Logout: REJECTED', action.payload);
             });
     },
 });
